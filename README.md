@@ -53,7 +53,9 @@ mMarkdownView.loadMarkdown("**MarkdownView**", MarkdownView.Styles.GITHUB);
 - [x] Tables
 - [x] TaskList
 - [x] AutoLink
+- [x] Abbreviation
 
-<img width='480' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/develop/1.png'/>
-<img width='480' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/develop/2.png'/>
-<img width='480' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/develop/3.png'/>
+<img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/1.png'/>
+<img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/2.png'/>
+<img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/3.png'/>
+<img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/4.png'/>
