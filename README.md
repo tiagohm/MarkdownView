@@ -30,6 +30,12 @@ LATEST-VERSION is [![](https://jitpack.io/v/tiagohm/MarkdownView.svg)](https://j
  android:layout_width="match_parent"
  android:layout_height="match_parent"/>
 ```
+```java
+mMarkdownView = (MarkdownView)findViewById(R.id.mark_view);
+mMarkdownView.loadMarkdownFromAsset("markdown1.md", MarkdownView.Styles.GITHUB);
+//or
+mMarkdownView.loadMarkdown("**MarkdownView**", MarkdownView.Styles.GITHUB);
+```
 
 ## Support
 
