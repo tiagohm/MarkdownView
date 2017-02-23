@@ -266,3 +266,23 @@
  [align="right"] {
      text-align: right;
  }
+
+ abbr {
+     border-bottom: 1px dotted #666;
+     cursor: help;
+ }
+
+ #tooltip {
+     position: fixed;
+     background-color: #0e0e0e;
+     border: 1px solid #1f1f1f;
+     border-radius: 5px;
+     font-size: smaller;
+     padding: 5px;
+     bottom: 5px;
+     left: 50%;
+     color: white;
+     text-align: center;
+     display: none;
+     box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+ }
