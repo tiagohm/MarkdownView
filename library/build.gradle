@@ -1,4 +1,7 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.tiagohm'
 
 android {
     compileSdkVersion 25
@@ -28,4 +31,9 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.1.1'
     testCompile 'junit:junit:4.12'
+    compile 'com.vladsch.flexmark:flexmark:0.15.0'
+    compile 'com.vladsch.flexmark:flexmark-ext-tables:0.15.0'
+    compile 'com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.15.0'
+    compile 'com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.15.0'
+    compile 'com.vladsch.flexmark:flexmark-ext-autolink:0.15.0'
 }
