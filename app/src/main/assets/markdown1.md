@@ -113,3 +113,10 @@ To nest one list within another, indent each item in the sublist by four spaces.
 # AutoLink
 
 http://www.github.com/
+
+# Abbreviation
+
+*[HTML]: Hyper Text Markup Language
+*[W3C]:  World Wide Web Consortium
+The HTML specification
+is maintained by the W3C.
