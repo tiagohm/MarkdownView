@@ -3,7 +3,7 @@ package br.tiagohm.markdownview.app;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import br.tiagohm.markdown.MarkdownView;
+import br.tiagohm.markdownview.MarkdownView;
 
 public class MainActivity extends AppCompatActivity
 {

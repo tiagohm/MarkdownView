@@ -1,4 +1,4 @@
-package br.tiagohm.markdown;
+package br.tiagohm.markdownview;
 
 import android.content.Context;
 import android.util.AttributeSet;
