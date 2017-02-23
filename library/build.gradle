@@ -33,4 +33,5 @@ dependencies {
     compile 'com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.15.0'
     compile 'com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.15.0'
     compile 'com.vladsch.flexmark:flexmark-ext-autolink:0.15.0'
+    compile 'com.vladsch.flexmark:flexmark-ext-abbreviation:0.15.0'
 }
