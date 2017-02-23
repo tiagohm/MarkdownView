@@ -37,6 +37,10 @@ mMarkdownView.loadMarkdownFromAsset("markdown1.md", MarkdownView.Styles.GITHUB);
 mMarkdownView.loadMarkdown("**MarkdownView**", MarkdownView.Styles.GITHUB);
 ```
 
+## Themes
+* GitHub
+* GitHub-Dark
+
 ## Support
 
 - [x] Bold `**Text**` or `__Text__`
