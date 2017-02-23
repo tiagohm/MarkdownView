@@ -8,6 +8,7 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 
 import com.vladsch.flexmark.ast.Node;
+import com.vladsch.flexmark.ext.abbreviation.AbbreviationExtension;
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
 import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
@@ -23,6 +24,7 @@ public class MarkdownView extends FrameLayout
             .extensions(Arrays.asList(TablesExtension.create(),
                     StrikethroughExtension.create(),
                     TaskListExtension.create(),
+                    AbbreviationExtension.create(),
                     AutolinkExtension.create()))
             .build();
     private static final HtmlRenderer RENDERER = HtmlRenderer.builder()
@@ -30,6 +32,7 @@ public class MarkdownView extends FrameLayout
             .extensions(Arrays.asList(TablesExtension.create(),
                     StrikethroughExtension.create(),
                     TaskListExtension.create(),
+                    AbbreviationExtension.create(),
                     AutolinkExtension.create()))
             .build();
     private WebView mWebView;
@@ -53,6 +56,7 @@ public class MarkdownView extends FrameLayout
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         try
         {
+            mWebView.getSettings().setJavaScriptEnabled(true);
             mWebView.getSettings().setLoadsImagesAutomatically(true);
         }
         catch(Exception e)
@@ -77,6 +81,9 @@ public class MarkdownView extends FrameLayout
                 .append("</head>")
                 .append("<body class=\"markdown-body\">")
                 .append(html)
+                .append("<span id='tooltip'></span>")
+                .append("<script type='text/javascript' src='file:///android_asset/js/jquery-3.1.1.min.js'></script>")
+                .append("<script type='text/javascript' src='file:///android_asset/js/markdownview.js'></script>")
                 .append("</body>")
                 .append("</html>").toString();
 
