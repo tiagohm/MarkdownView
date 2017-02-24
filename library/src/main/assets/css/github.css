@@ -288,6 +288,7 @@
  }
 
  mark {
+     color: black;
      padding: .2em;
      background-color: #ffff9c;
      border-radius: 1px;
