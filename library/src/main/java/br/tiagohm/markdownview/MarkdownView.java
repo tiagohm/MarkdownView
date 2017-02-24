@@ -18,6 +18,8 @@ import com.vladsch.flexmark.parser.Parser;
 
 import java.util.Arrays;
 
+import br.tiagohm.markdownview.ext.mark.MarkExtension;
+
 public class MarkdownView extends FrameLayout
 {
     private static final Parser PARSER = Parser.builder()
@@ -25,7 +27,8 @@ public class MarkdownView extends FrameLayout
                     StrikethroughExtension.create(),
                     TaskListExtension.create(),
                     AbbreviationExtension.create(),
-                    AutolinkExtension.create()))
+                    AutolinkExtension.create(),
+                    MarkExtension.create()))
             .build();
     private static final HtmlRenderer RENDERER = HtmlRenderer.builder()
             .escapeHtml(true)
@@ -33,7 +36,8 @@ public class MarkdownView extends FrameLayout
                     StrikethroughExtension.create(),
                     TaskListExtension.create(),
                     AbbreviationExtension.create(),
-                    AutolinkExtension.create()))
+                    AutolinkExtension.create(),
+                    MarkExtension.create()))
             .build();
     private WebView mWebView;
 
