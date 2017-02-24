@@ -120,3 +120,11 @@ http://www.github.com/
 *[W3C]:  World Wide Web Consortium
 The HTML specification
 is maintained by the W3C.
+
+# Mark
+
+This is a ==Marked Text==.
+
+# Subscript & Superscript
+
+200 ml de H~2~O têm 6,69 * 10^24^ moléculas

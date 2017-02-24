@@ -58,6 +58,9 @@ mMarkdownView.loadMarkdown("**MarkdownView**", MarkdownView.Styles.GITHUB);
 - [x] TaskList
 - [x] AutoLink
 - [x] Abbreviation
+- [x] Mark `==Text==`
+- [x] Subscript `H~2~O`
+- [x] Superscript `10^-10^`
 
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/1.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/2.png'/>
