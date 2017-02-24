@@ -19,6 +19,7 @@ import com.vladsch.flexmark.superscript.SuperscriptExtension;
 
 import java.util.Arrays;
 
+import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
 
 public class MarkdownView extends FrameLayout
@@ -30,7 +31,8 @@ public class MarkdownView extends FrameLayout
                     AutolinkExtension.create(),
                     MarkExtension.create(),
                     StrikethroughSubscriptExtension.create(),
-                    SuperscriptExtension.create()))
+                    SuperscriptExtension.create(),
+                    KeystrokeExtension.create()))
             .build();
     private static final HtmlRenderer RENDERER = HtmlRenderer.builder()
             .escapeHtml(true)
@@ -40,7 +42,8 @@ public class MarkdownView extends FrameLayout
                     AutolinkExtension.create(),
                     MarkExtension.create(),
                     StrikethroughSubscriptExtension.create(),
-                    SuperscriptExtension.create()))
+                    SuperscriptExtension.create(),
+                    KeystrokeExtension.create()))
             .build();
     private WebView mWebView;
 
