@@ -61,6 +61,7 @@ mMarkdownView.loadMarkdown("**MarkdownView**", MarkdownView.Styles.GITHUB);
 - [x] Mark `==Text==`
 - [x] Subscript `H~2~O`
 - [x] Superscript `10^-10^`
+- [x] Keystroke `@ctrl+alt+del@`
 
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/1.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/2.png'/>
