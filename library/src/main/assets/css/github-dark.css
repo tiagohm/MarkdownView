@@ -286,3 +286,10 @@
      display: none;
      box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
  }
+
+ mark {
+      color: #141414;
+      padding: .2em;
+      background-color: #ffff9c;
+      border-radius: 1px;
+  }
