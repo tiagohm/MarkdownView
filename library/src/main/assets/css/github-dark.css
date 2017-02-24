@@ -206,12 +206,11 @@
  }
 
  code {
-   margin: 0 2px;
-   padding: 0 5px;
+   padding: 2px 4px;
    white-space: nowrap;
-   border: 1px solid #151515;
-   background-color: #070707;
-   border-radius: 3px;
+   background-color: #060D0B;
+   border-radius: 4px;
+   color: #C7254E;
  }
 
  pre code {
@@ -230,11 +229,6 @@
    overflow: auto;
    padding: 6px 10px;
    border-radius: 3px;
- }
-
- pre code {
-   background-color: transparent;
-   border: none;
  }
 
  .task-list-item {
