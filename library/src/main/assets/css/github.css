@@ -305,4 +305,9 @@
      border-radius: 3px;
      box-shadow: inset 0 -1px 0 #bbb;
      font-size: 11px;
-  }
+ }
+
+ math {
+     color: #656d77 !important;
+     padding: 2px;
+ }

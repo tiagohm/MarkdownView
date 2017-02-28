@@ -306,3 +306,8 @@
       box-shadow: inset 0 -1px 0 #bbb;
       font-size: 11px;
  }
+
+ math {
+      color: #9a9288 !important;
+      padding: 2px;
+ }
