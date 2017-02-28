@@ -62,8 +62,10 @@ mMarkdownView.loadMarkdown("**MarkdownView**", MarkdownView.Styles.GITHUB);
 - [x] Subscript `H~2~O`
 - [x] Superscript `10^-10^`
 - [x] Keystroke `@ctrl+alt+del@`
+- [x] MathJax `$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$`
 
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/1.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/2.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/3.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/4.png'/>
+<img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/5.png'/>
