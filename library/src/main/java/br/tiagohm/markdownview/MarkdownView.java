@@ -21,6 +21,7 @@ import java.util.Arrays;
 
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
+import br.tiagohm.markdownview.ext.mathjax.MathJaxExtension;
 
 public class MarkdownView extends FrameLayout
 {
@@ -32,7 +33,8 @@ public class MarkdownView extends FrameLayout
                     MarkExtension.create(),
                     StrikethroughSubscriptExtension.create(),
                     SuperscriptExtension.create(),
-                    KeystrokeExtension.create()))
+                    KeystrokeExtension.create(),
+                    MathJaxExtension.create()))
             .build();
     private static final HtmlRenderer RENDERER = HtmlRenderer.builder()
             .escapeHtml(true)
@@ -43,7 +45,8 @@ public class MarkdownView extends FrameLayout
                     MarkExtension.create(),
                     StrikethroughSubscriptExtension.create(),
                     SuperscriptExtension.create(),
-                    KeystrokeExtension.create()))
+                    KeystrokeExtension.create(),
+                    MathJaxExtension.create()))
             .build();
     private WebView mWebView;
 
@@ -94,6 +97,8 @@ public class MarkdownView extends FrameLayout
                 .append("<span id='tooltip'></span>")
                 .append("<script type='text/javascript' src='file:///android_asset/js/jquery-3.1.1.min.js'></script>")
                 .append("<script type='text/javascript' src='file:///android_asset/js/markdownview.js'></script>")
+                .append("<script type=\"text/x-mathjax-config\"> MathJax.Hub.Config({showProcessingMessages: false, showMathMenu: false, tex2jax: {inlineMath: [['$','$']]}});</script>")
+                .append("<script type=\"text/javascript\" src=\"https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML\"></script>")
                 .append("</body>")
                 .append("</html>").toString();
 
