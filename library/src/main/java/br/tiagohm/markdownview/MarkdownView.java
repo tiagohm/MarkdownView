@@ -1,6 +1,7 @@
 package br.tiagohm.markdownview;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -36,7 +37,7 @@ public class MarkdownView extends FrameLayout
                     KeystrokeExtension.create(),
                     MathJaxExtension.create()))
             .build();
-    private static final HtmlRenderer RENDERER = HtmlRenderer.builder()
+    private static final HtmlRenderer.Builder RENDERER_BUILDER = HtmlRenderer.builder()
             .escapeHtml(true)
             .extensions(Arrays.asList(TablesExtension.create(),
                     TaskListExtension.create(),
@@ -46,8 +47,7 @@ public class MarkdownView extends FrameLayout
                     StrikethroughSubscriptExtension.create(),
                     SuperscriptExtension.create(),
                     KeystrokeExtension.create(),
-                    MathJaxExtension.create()))
-            .build();
+                    MathJaxExtension.create()));
     private WebView mWebView;
 
     public MarkdownView(Context context)
@@ -77,13 +77,31 @@ public class MarkdownView extends FrameLayout
             e.printStackTrace();
         }
 
+        try
+        {
+            TypedArray attr = getContext().obtainStyledAttributes(attrs, R.styleable.MarkdownView);
+            setEscapeHtml(attr.getBoolean(R.styleable.MarkdownView_escapeHtml, true));
+            attr.recycle();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
         addView(mWebView);
+    }
+
+    public MarkdownView setEscapeHtml(boolean flag)
+    {
+        RENDERER_BUILDER.escapeHtml(flag);
+        return this;
     }
 
     public void loadMarkdown(String text, String cssPath)
     {
         Node node = PARSER.parse(text);
-        String html = RENDERER.render(node);
+        HtmlRenderer renderer = RENDERER_BUILDER.build();
+        String html = renderer.render(node);
 
         StringBuilder sb = new StringBuilder();
         html = sb.append("<html>")
