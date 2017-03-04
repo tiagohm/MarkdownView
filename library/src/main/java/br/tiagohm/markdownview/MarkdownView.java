@@ -3,11 +3,11 @@ package br.tiagohm.markdownview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 
+import com.orhanobut.logger.Logger;
 import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.ext.abbreviation.AbbreviationExtension;
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
@@ -120,7 +120,7 @@ public class MarkdownView extends FrameLayout
                 .append("</body>")
                 .append("</html>").toString();
 
-        Log.d("TAG", html);
+        Logger.d(html);
 
         mWebView.loadDataWithBaseURL("",
                 html,
