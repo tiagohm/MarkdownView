@@ -27,6 +27,7 @@ LATEST-VERSION is [![](https://jitpack.io/v/tiagohm/MarkdownView.svg)](https://j
 ```xml
 <br.tiagohm.markdownview.MarkdownView
  android:id="@+id/markdown_view"
+ app:escapeHtml="false"
  android:layout_width="match_parent"
  android:layout_height="match_parent"/>
 ```
