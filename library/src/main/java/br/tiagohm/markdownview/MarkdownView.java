@@ -3,20 +3,23 @@ package br.tiagohm.markdownview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 
+import com.orhanobut.logger.Logger;
 import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.ext.abbreviation.AbbreviationExtension;
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
+import com.vladsch.flexmark.ext.footnotes.FootnoteExtension;
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughSubscriptExtension;
 import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.superscript.SuperscriptExtension;
+import com.vladsch.flexmark.util.options.DataHolder;
+import com.vladsch.flexmark.util.options.MutableDataSet;
 
 import java.util.Arrays;
 
@@ -26,7 +29,13 @@ import br.tiagohm.markdownview.ext.mathjax.MathJaxExtension;
 
 public class MarkdownView extends FrameLayout
 {
-    private static final Parser PARSER = Parser.builder()
+    private static final DataHolder OPTIONS = new MutableDataSet()
+            .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
+            .set(FootnoteExtension.FOOTNOTE_REF_SUFFIX, "]")
+            //.set(FootnoteExtension.FOOTNOTE_BACK_REF_STRING, "&#8593")
+            ;
+
+    private static final Parser PARSER = Parser.builder(OPTIONS)
             .extensions(Arrays.asList(TablesExtension.create(),
                     TaskListExtension.create(),
                     AbbreviationExtension.create(),
@@ -35,9 +44,10 @@ public class MarkdownView extends FrameLayout
                     StrikethroughSubscriptExtension.create(),
                     SuperscriptExtension.create(),
                     KeystrokeExtension.create(),
-                    MathJaxExtension.create()))
+                    MathJaxExtension.create(),
+                    FootnoteExtension.create()))
             .build();
-    private static final HtmlRenderer.Builder RENDERER_BUILDER = HtmlRenderer.builder()
+    private static final HtmlRenderer.Builder RENDERER_BUILDER = HtmlRenderer.builder(OPTIONS)
             .escapeHtml(true)
             .extensions(Arrays.asList(TablesExtension.create(),
                     TaskListExtension.create(),
@@ -47,7 +57,8 @@ public class MarkdownView extends FrameLayout
                     StrikethroughSubscriptExtension.create(),
                     SuperscriptExtension.create(),
                     KeystrokeExtension.create(),
-                    MathJaxExtension.create()));
+                    MathJaxExtension.create(),
+                    FootnoteExtension.create()));
     private WebView mWebView;
 
     public MarkdownView(Context context)
@@ -120,7 +131,7 @@ public class MarkdownView extends FrameLayout
                 .append("</body>")
                 .append("</html>").toString();
 
-        Log.d("TAG", html);
+        Logger.d(html);
 
         mWebView.loadDataWithBaseURL("",
                 html,

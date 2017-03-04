@@ -38,4 +38,6 @@ dependencies {
     compile 'com.vladsch.flexmark:flexmark-ext-autolink:0.16.1'
     compile 'com.vladsch.flexmark:flexmark-ext-abbreviation:0.16.1'
     compile 'com.vladsch.flexmark:flexmark-ext-superscript:0.16.1'
+    compile 'com.vladsch.flexmark:flexmark-ext-footnotes:0.16.1'
+    compile 'com.orhanobut:logger:1.15'
 }
