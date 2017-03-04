@@ -311,3 +311,28 @@
      color: #656d77 !important;
      padding: 2px;
  }
+
+ .footnote-ref {
+ }
+
+ .footnotes {
+   border-top: 1px solid #eee;
+   padding: 10px 5px 5px 5px;
+ }
+
+ .footnotes li,
+ .footnotes li p {
+   margin: 0;
+ }
+
+ .footnotes li p:last-of-type {
+   display: inline;
+ }
+
+ .footnotes hr {
+   display: none;
+ }
+
+ .footnotes ol {
+    margin: 0px;
+ }
