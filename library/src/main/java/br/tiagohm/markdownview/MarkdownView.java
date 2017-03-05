@@ -2,26 +2,40 @@ package br.tiagohm.markdownview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 
 import com.orhanobut.logger.Logger;
+import com.vladsch.flexmark.ast.Image;
 import com.vladsch.flexmark.ast.Node;
+import com.vladsch.flexmark.ast.util.TextCollectingVisitor;
 import com.vladsch.flexmark.ext.abbreviation.AbbreviationExtension;
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
 import com.vladsch.flexmark.ext.footnotes.FootnoteExtension;
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughSubscriptExtension;
 import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
+import com.vladsch.flexmark.html.CustomNodeRenderer;
 import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.html.HtmlWriter;
+import com.vladsch.flexmark.html.renderer.LinkType;
+import com.vladsch.flexmark.html.renderer.NodeRenderer;
+import com.vladsch.flexmark.html.renderer.NodeRendererContext;
+import com.vladsch.flexmark.html.renderer.NodeRendererFactory;
+import com.vladsch.flexmark.html.renderer.NodeRenderingHandler;
+import com.vladsch.flexmark.html.renderer.ResolvedLink;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.superscript.SuperscriptExtension;
+import com.vladsch.flexmark.util.html.Escaping;
 import com.vladsch.flexmark.util.options.DataHolder;
 import com.vladsch.flexmark.util.options.MutableDataSet;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
@@ -49,6 +63,7 @@ public class MarkdownView extends FrameLayout
             .build();
     private static final HtmlRenderer.Builder RENDERER_BUILDER = HtmlRenderer.builder(OPTIONS)
             .escapeHtml(true)
+            .nodeRendererFactory(new NodeRendererFactoryImpl())
             .extensions(Arrays.asList(TablesExtension.create(),
                     TaskListExtension.create(),
                     AbbreviationExtension.create(),
@@ -149,5 +164,70 @@ public class MarkdownView extends FrameLayout
     {
         String GITHUB = "file:///android_asset/css/github.css";
         String GITHUB_DARK = "file:///android_asset/css/github-dark.css";
+    }
+
+    public static class NodeRendererFactoryImpl implements NodeRendererFactory
+    {
+        @Override
+        public NodeRenderer create(DataHolder options)
+        {
+            return new NodeRenderer()
+            {
+                @Override
+                public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers()
+                {
+                    HashSet<NodeRenderingHandler<?>> set = new HashSet<>();
+                    set.add(new NodeRenderingHandler<>(Image.class, new CustomNodeRenderer<Image>()
+                    {
+                        @Override
+                        public void render(Image node, NodeRendererContext context, HtmlWriter html)
+                        {
+                            if(!context.isDoNotRenderLinks())
+                            {
+                                String altText = new TextCollectingVisitor().collectAndGetText(node);
+
+                                ResolvedLink resolvedLink = context.resolveLink(LinkType.IMAGE, node.getUrl().unescape(), null);
+                                String url = resolvedLink.getUrl();
+
+                                if(!node.getUrlContent().isEmpty())
+                                {
+                                    // reverse URL encoding of =, &
+                                    String content = Escaping.percentEncodeUrl(node.getUrlContent()).replace("+", "%2B").replace("%3D", "=").replace("%26", "&amp;");
+                                    url += content;
+                                }
+
+                                final int index = url.indexOf('@');
+
+                                if(index >= 0)
+                                {
+                                    String[] dimensions = url.substring(index + 1, url.length()).split("\\|");
+                                    url = url.substring(0, index);
+
+                                    if(dimensions.length == 2)
+                                    {
+                                        String width = TextUtils.isEmpty(dimensions[0]) ? "auto" : dimensions[0];
+                                        String height = TextUtils.isEmpty(dimensions[1]) ? "auto" : dimensions[1];
+                                        html.attr("style", "width: " + width + "; height: " + height);
+                                    }
+                                }
+
+                                html.attr("src", url);
+                                html.attr("alt", altText);
+
+                                if(node.getTitle().isNotNull())
+                                {
+                                    html.attr("title", node.getTitle().unescape());
+                                }
+
+                                html.srcPos(node.getChars()).withAttr(resolvedLink).tagVoid("img");
+                            }
+                        }
+                    }));
+                    return set;
+                }
+            };
+        }
+
+
     }
 }
