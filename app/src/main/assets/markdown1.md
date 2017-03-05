@@ -47,7 +47,8 @@ Link text is enclosed by square brackets [], and for inline links, the link URL 
 # Images
 Images are almost identical to links, but an image starts with an exclamation point !.
 
-![](https://www.google.com.br/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png)
+![](https://www.google.com.br/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png@100%|100px)
+![](https://www.google.com.br/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png@100px|auto)
 
 # Code
 To create inline code, wrap with backticks `.
