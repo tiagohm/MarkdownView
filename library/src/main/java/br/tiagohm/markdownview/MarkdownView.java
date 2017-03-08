@@ -163,7 +163,7 @@ public class MarkdownView extends FrameLayout
     public interface Styles
     {
         String GITHUB = "file:///android_asset/css/github.css";
-        String GITHUB_DARK = "file:///android_asset/css/github-dark.css";
+        String ELECTRON = "file:///android_asset/css/electron.css";
     }
 
     public static class NodeRendererFactoryImpl implements NodeRendererFactory

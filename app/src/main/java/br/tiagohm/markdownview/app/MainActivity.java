@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity
     private int stylePos = 0;
     private String[] STYLES = new String[]{
             MarkdownView.Styles.GITHUB,
-            MarkdownView.Styles.GITHUB_DARK
+            MarkdownView.Styles.ELECTRON
     };
 
     @Override
