@@ -40,7 +40,7 @@ mMarkdownView.loadMarkdown("**MarkdownView**", MarkdownView.Styles.GITHUB);
 
 ## Themes
 * GitHub
-* GitHub-Dark
+* Electron
 
 ## Support
 

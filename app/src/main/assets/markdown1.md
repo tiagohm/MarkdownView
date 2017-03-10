@@ -63,6 +63,21 @@ Inline `code`
 Or use 3 backticks
 ```
 
+```javascript
+var s = "JavaScript syntax highlighting";
+alert(s);
+```
+ 
+```python
+s = "Python syntax highlighting"
+print s
+```
+ 
+```
+No language indicated, so no syntax highlighting. 
+But let's throw in a <b>tag</b>.
+```
+
 # Blockquotes
 To create a blockquote, start a line with greater than > followed by an optional space.
 

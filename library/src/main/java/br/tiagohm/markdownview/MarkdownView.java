@@ -46,6 +46,8 @@ public class MarkdownView extends FrameLayout
     private static final DataHolder OPTIONS = new MutableDataSet()
             .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
             .set(FootnoteExtension.FOOTNOTE_REF_SUFFIX, "]")
+            .set(HtmlRenderer.FENCED_CODE_LANGUAGE_CLASS_PREFIX, "")
+            .set(HtmlRenderer.FENCED_CODE_NO_LANGUAGE_CLASS, "nohighlight")
             //.set(FootnoteExtension.FOOTNOTE_BACK_REF_STRING, "&#8593")
             ;
 
@@ -130,20 +132,23 @@ public class MarkdownView extends FrameLayout
         String html = renderer.render(node);
 
         StringBuilder sb = new StringBuilder();
-        html = sb.append("<html>")
-                .append("<head>")
+        html = sb.append("<html>\n")
+                .append("<head>\n")
+                .append("<link rel=\"stylesheet\" href=\"file:///android_asset/css/default.css\">")
                 .append("<link rel=\"stylesheet\" href=\"")
                 .append(cssPath == null ? "" : cssPath)
-                .append("\" />")
-                .append("</head>")
-                .append("<body class=\"markdown-body\">")
+                .append("\" />\n")
+                .append("</head>\n")
+                .append("<body class=\"markdown-body\">\n")
                 .append(html)
-                .append("<span id='tooltip'></span>")
-                .append("<script type='text/javascript' src='file:///android_asset/js/jquery-3.1.1.min.js'></script>")
-                .append("<script type='text/javascript' src='file:///android_asset/js/markdownview.js'></script>")
-                .append("<script type=\"text/x-mathjax-config\"> MathJax.Hub.Config({showProcessingMessages: false, showMathMenu: false, tex2jax: {inlineMath: [['$','$']]}});</script>")
-                .append("<script type=\"text/javascript\" src=\"https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML\"></script>")
-                .append("</body>")
+                .append("<span id='tooltip'></span>\n")
+                .append("<script type='text/javascript' src='file:///android_asset/js/jquery-3.1.1.min.js'></script>\n")
+                .append("<script type='text/javascript' src='file:///android_asset/js/markdownview.js'></script>\n")
+                .append("<script type='text/javascript' src='file:///android_asset/js/highlight.js'></script>\n")
+                .append("<script>hljs.initHighlightingOnLoad();</script>")
+                .append("<script type=\"text/x-mathjax-config\"> MathJax.Hub.Config({showProcessingMessages: false, messageStyle: 'none', showMathMenu: false, tex2jax: {inlineMath: [['$','$']]}});</script>\n")
+                .append("<script type=\"text/javascript\" src=\"https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML\"></script>\n")
+                .append("</body>\n")
                 .append("</html>").toString();
 
         Logger.d(html);
@@ -163,7 +168,7 @@ public class MarkdownView extends FrameLayout
     public interface Styles
     {
         String GITHUB = "file:///android_asset/css/github.css";
-        String GITHUB_DARK = "file:///android_asset/css/github-dark.css";
+        String ELECTRON = "file:///android_asset/css/electron.css";
     }
 
     public static class NodeRendererFactoryImpl implements NodeRendererFactory
