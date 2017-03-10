@@ -73,6 +73,7 @@ mMarkdownView.loadMarkdown("**MarkdownView**", MarkdownView.Styles.GITHUB);
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/3.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/4.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/5.png'/>
+<img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/6.png'/>
 
 ## LICENSE
 ```
