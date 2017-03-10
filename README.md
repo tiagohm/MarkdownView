@@ -66,7 +66,7 @@ mMarkdownView.loadMarkdown("**MarkdownView**", MarkdownView.Styles.GITHUB);
 - [x] MathJax `$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$`
 - [x] Footnotes
 - [x] Image Resizing `![alt](url@100px|auto)`
-- [x] Syntax Highlighting
+- [x] Syntax Highlighting (using [Highlight.js](https://highlightjs.org/))
 
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/1.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/2.png'/>
