@@ -46,6 +46,8 @@ public class MarkdownView extends FrameLayout
     private static final DataHolder OPTIONS = new MutableDataSet()
             .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
             .set(FootnoteExtension.FOOTNOTE_REF_SUFFIX, "]")
+            .set(HtmlRenderer.FENCED_CODE_LANGUAGE_CLASS_PREFIX, "")
+            .set(HtmlRenderer.FENCED_CODE_NO_LANGUAGE_CLASS, "nohighlight")
             //.set(FootnoteExtension.FOOTNOTE_BACK_REF_STRING, "&#8593")
             ;
 
@@ -132,6 +134,7 @@ public class MarkdownView extends FrameLayout
         StringBuilder sb = new StringBuilder();
         html = sb.append("<html>\n")
                 .append("<head>\n")
+                .append("<link rel=\"stylesheet\" href=\"file:///android_asset/css/default.css\">")
                 .append("<link rel=\"stylesheet\" href=\"")
                 .append(cssPath == null ? "" : cssPath)
                 .append("\" />\n")
@@ -141,6 +144,8 @@ public class MarkdownView extends FrameLayout
                 .append("<span id='tooltip'></span>\n")
                 .append("<script type='text/javascript' src='file:///android_asset/js/jquery-3.1.1.min.js'></script>\n")
                 .append("<script type='text/javascript' src='file:///android_asset/js/markdownview.js'></script>\n")
+                .append("<script type='text/javascript' src='file:///android_asset/js/highlight.js'></script>\n")
+                .append("<script>hljs.initHighlightingOnLoad();</script>")
                 .append("<script type=\"text/x-mathjax-config\"> MathJax.Hub.Config({showProcessingMessages: false, messageStyle: 'none', showMathMenu: false, tex2jax: {inlineMath: [['$','$']]}});</script>\n")
                 .append("<script type=\"text/javascript\" src=\"https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML\"></script>\n")
                 .append("</body>\n")
