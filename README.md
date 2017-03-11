@@ -17,7 +17,7 @@ allprojects {
 ```
 Add the dependency:
 ```gradle
-compile 'com.github.tiagohm:MarkdownView:LATEST-VERSION'
+compile 'com.github.tiagohm:MarkdownView:library:LATEST-VERSION'
 ```
 
 LATEST-VERSION is [![](https://jitpack.io/v/tiagohm/MarkdownView.svg)](https://jitpack.io/#tiagohm/MarkdownView)
@@ -32,10 +32,28 @@ LATEST-VERSION is [![](https://jitpack.io/v/tiagohm/MarkdownView.svg)](https://j
  android:layout_height="match_parent"/>
 ```
 ```java
-mMarkdownView = (MarkdownView)findViewById(R.id.mark_view);
+mMarkdownView = (MarkdownView)findViewById(R.id.markdown_view);
 mMarkdownView.loadMarkdownFromAsset("markdown1.md", MarkdownView.Styles.GITHUB);
 //or
 mMarkdownView.loadMarkdown("**MarkdownView**", MarkdownView.Styles.GITHUB);
+```
+
+## Using Emojies
+##### Without internet
+Add the dependency:
+```gradle
+compile 'com.github.tiagohm:MarkdownView:emoji:LATEST-VERSION'
+```
+
+##### With internet
+Add the permission:
+```xml
+<uses-permission android:name="android.permission.INTERNET"/>
+```
+
+```java
+mMarkdownView.setEmojiRootPath("http://emojione.com/wp-content/uploads/assets/emojis/");
+mMarkdownView.setEmojiImageExtension("svg");
 ```
 
 ## Themes
