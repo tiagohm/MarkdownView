@@ -67,6 +67,7 @@ mMarkdownView.loadMarkdown("**MarkdownView**", MarkdownView.Styles.GITHUB);
 - [x] Footnotes
 - [x] Image Resizing `![alt](url@100px|auto)`
 - [x] Syntax Highlighting (using [Highlight.js](https://highlightjs.org/))
+- [x] Emoji ([EmojiOne](http://emojione.com)) `:smile:`
 
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/1.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/2.png'/>
