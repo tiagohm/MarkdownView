@@ -64,4 +64,16 @@ public class EmojiDelimiterProcessor implements DelimiterProcessor
             opener.convertDelimitersToText(delimitersUsed, closer);
         }
     }
+
+    @Override
+    public boolean canBeOpener(boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace)
+    {
+        return leftFlanking;
+    }
+
+    @Override
+    public boolean canBeCloser(boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace)
+    {
+        return rightFlanking;
+    }
 }
