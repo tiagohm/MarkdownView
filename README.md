@@ -33,9 +33,10 @@ LATEST-VERSION is [![](https://jitpack.io/v/tiagohm/MarkdownView.svg)](https://j
 ```
 ```java
 mMarkdownView = (MarkdownView)findViewById(R.id.markdown_view);
-mMarkdownView.loadMarkdownFromAsset("markdown1.md", MarkdownView.Styles.GITHUB);
-//or
 mMarkdownView.loadMarkdown("**MarkdownView**", MarkdownView.Styles.GITHUB);
+mMarkdownView.loadMarkdownFromAsset("markdown1.md", MarkdownView.Styles.GITHUB);
+mMarkdownView.loadMarkdownFromFile(new File(), MarkdownView.Styles.GITHUB);
+mMarkdownView.loadMarkdownFromUrl("url", MarkdownView.Styles.GITHUB);
 ```
 
 ## Using Emojies
