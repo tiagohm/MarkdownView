@@ -57,4 +57,16 @@ public class MathJaxDelimiterProcessor implements DelimiterProcessor
         MathJax mj = new MathJax(opener.getTailChars(delimitersUsed), BasedSequence.NULL, closer.getLeadChars(delimitersUsed));
         opener.moveNodesBetweenDelimitersTo(mj, closer);
     }
+
+    @Override
+    public boolean canBeOpener(boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace)
+    {
+        return leftFlanking;
+    }
+
+    @Override
+    public boolean canBeCloser(boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace)
+    {
+        return rightFlanking;
+    }
 }

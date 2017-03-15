@@ -57,4 +57,16 @@ public class MarkDelimiterProcessor implements DelimiterProcessor
         Mark mark = new Mark(opener.getTailChars(delimitersUsed), BasedSequence.NULL, closer.getLeadChars(delimitersUsed));
         opener.moveNodesBetweenDelimitersTo(mark, closer);
     }
+
+    @Override
+    public boolean canBeOpener(boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace)
+    {
+        return leftFlanking;
+    }
+
+    @Override
+    public boolean canBeCloser(boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace)
+    {
+        return rightFlanking;
+    }
 }
