@@ -2,6 +2,7 @@ package br.tiagohm.markdownview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
@@ -34,6 +35,11 @@ import com.vladsch.flexmark.util.options.DataHolder;
 import com.vladsch.flexmark.util.options.MutableDataHolder;
 import com.vladsch.flexmark.util.options.MutableDataSet;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -181,6 +187,16 @@ public class MarkdownView extends FrameLayout
         loadMarkdown(Utils.getStringFromAssetFile(getContext().getAssets(), path), cssPath);
     }
 
+    public void loadMarkdownFromFile(File file, String cssPath)
+    {
+        loadMarkdown(Utils.getStringFromFile(file), cssPath);
+    }
+
+    public void loadMarkdownFromUrl(String url, String cssPath)
+    {
+        new LoadMarkdownUrlTask().execute(url, cssPath);
+    }
+
     public interface Styles
     {
         String GITHUB = "file:///android_asset/css/github.css";
@@ -250,5 +266,51 @@ public class MarkdownView extends FrameLayout
         }
 
 
+    }
+
+    private class LoadMarkdownUrlTask extends AsyncTask<String, Void, String>
+    {
+        private String cssPath;
+
+        @Override
+        protected String doInBackground(String... params)
+        {
+            String url = params[0];
+            cssPath = params[1];
+            InputStream is = null;
+            try
+            {
+                URLConnection connection = new URL(url).openConnection();
+                connection.setReadTimeout(5000);
+                connection.setConnectTimeout(5000);
+                connection.setRequestProperty("Accept-Charset", "UTF-8");
+                return Utils.getStringFromInputStream(is = connection.getInputStream());
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+                return "";
+            }
+            finally
+            {
+                if(is != null)
+                {
+                    try
+                    {
+                        is.close();
+                    }
+                    catch(IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s)
+        {
+            loadMarkdown(s, cssPath);
+        }
     }
 }
