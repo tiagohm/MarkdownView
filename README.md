@@ -17,7 +17,7 @@ allprojects {
 ```
 Add the dependency:
 ```gradle
-compile 'com.github.tiagohm:MarkdownView:library:LATEST-VERSION'
+compile 'com.github.tiagohm.MarkdownView:library:LATEST-VERSION'
 ```
 
 LATEST-VERSION is [![](https://jitpack.io/v/tiagohm/MarkdownView.svg)](https://jitpack.io/#tiagohm/MarkdownView)
@@ -43,7 +43,7 @@ mMarkdownView.loadMarkdownFromUrl("url", MarkdownView.Styles.GITHUB);
 ##### Without internet
 Add the dependency:
 ```gradle
-compile 'com.github.tiagohm:MarkdownView:emoji:LATEST-VERSION'
+compile 'com.github.tiagohm.MarkdownView:emoji:LATEST-VERSION'
 ```
 
 ##### With internet
