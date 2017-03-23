@@ -33,10 +33,11 @@ LATEST-VERSION is [![](https://jitpack.io/v/tiagohm/MarkdownView.svg)](https://j
 ```
 ```java
 mMarkdownView = (MarkdownView)findViewById(R.id.markdown_view);
-mMarkdownView.loadMarkdown("**MarkdownView**", MarkdownView.Styles.GITHUB);
-mMarkdownView.loadMarkdownFromAsset("markdown1.md", MarkdownView.Styles.GITHUB);
-mMarkdownView.loadMarkdownFromFile(new File(), MarkdownView.Styles.GITHUB);
-mMarkdownView.loadMarkdownFromUrl("url", MarkdownView.Styles.GITHUB);
+mMarkdownView.addStyleSheet(new Github());
+mMarkdownView.loadMarkdown("**MarkdownView**");
+mMarkdownView.loadMarkdownFromAsset("markdown1.md");
+mMarkdownView.loadMarkdownFromFile(new File());
+mMarkdownView.loadMarkdownFromUrl("url");
 ```
 
 ## Using Emojies
@@ -59,7 +60,7 @@ mMarkdownView.setEmojiImageExtension("svg");
 
 ## Custom CSS
 
-```
+```java
 //InternalStyleSheet css = new InternalStyleSheet();
 InternalStyleSheet css = new Github();
 css.addMedia("screen and (min-width: 1281px)");
@@ -69,6 +70,7 @@ css.addRule("h1", "color: green");
 mMarkdownView.addStyleSheet(css);
 
 mMarkdownView.addStyleSheet(ExternalStyleSheet.fromAsset("github.css", null);
+mMarkdownView.addStyleSheet(ExternalStyleSheet.fromAsset("github2.css", "screen and (min-width: 1281px)");
 ```
 
 ## Themes
