@@ -57,9 +57,22 @@ mMarkdownView.setEmojiRootPath("http://emojione.com/wp-content/uploads/assets/em
 mMarkdownView.setEmojiImageExtension("svg");
 ```
 
+## Custom CSS
+
+```
+//InternalStyleSheet css = new InternalStyleSheet();
+InternalStyleSheet css = new Github();
+css.addMedia("screen and (min-width: 1281px)");
+css.addRule("h1", "color: orange");
+css.endMedia();
+css.addRule("h1", "color: green");
+mMarkdownView.addStyleSheet(css);
+
+mMarkdownView.addStyleSheet(ExternalStyleSheet.fromAsset("github.css", null);
+```
+
 ## Themes
 * GitHub
-* Electron
 
 ## Support
 
@@ -87,6 +100,7 @@ mMarkdownView.setEmojiImageExtension("svg");
 - [x] Image Resizing `![alt](url@100px|auto)`
 - [x] Syntax Highlighting (using [Highlight.js](https://highlightjs.org/))
 - [x] Emoji ([EmojiOne](http://emojione.com)) `:smile:`
+- [x] Custom CSS
 
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/1.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/2.png'/>
