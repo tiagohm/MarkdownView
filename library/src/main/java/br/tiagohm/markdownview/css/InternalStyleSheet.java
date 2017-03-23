@@ -9,10 +9,38 @@ import java.util.Map;
 
 public class InternalStyleSheet implements StyleSheet
 {
-    private Map<String, Map<String, String>> mRules = new LinkedHashMap<>();
+    private static final String NO_MEDIA_QUERY = "NO_MEDIA_QUERY";
+    private Map<String, Map<String, Map<String, String>>> mRules = new LinkedHashMap<>();
+    private String currentMediaQuery;
 
     public InternalStyleSheet()
     {
+        currentMediaQuery = NO_MEDIA_QUERY;
+        mRules.put(currentMediaQuery, new LinkedHashMap<String, Map<String, String>>());
+    }
+
+    private Map<String, Map<String, String>> getCurrentMediaQuery()
+    {
+        return mRules.get(currentMediaQuery);
+    }
+
+    public void addMedia(String mediaQuery)
+    {
+        if(mediaQuery != null && mediaQuery.trim().length() > 0)
+        {
+            mediaQuery = mediaQuery.trim();
+
+            if(!mRules.containsKey(mediaQuery))
+            {
+                mRules.put(mediaQuery, new LinkedHashMap<String, Map<String, String>>());
+                currentMediaQuery = mediaQuery;
+            }
+        }
+    }
+
+    public void endMedia()
+    {
+        currentMediaQuery = NO_MEDIA_QUERY;
     }
 
     public void addRule(String selector, String... declarations)
@@ -21,9 +49,9 @@ public class InternalStyleSheet implements StyleSheet
         {
             selector = selector.trim();
 
-            if(!mRules.containsKey(selector))
+            if(!getCurrentMediaQuery().containsKey(selector))
             {
-                mRules.put(selector, new LinkedHashMap<String, String>());
+                getCurrentMediaQuery().put(selector, new LinkedHashMap<String, String>());
             }
 
             for(String declaration : declarations)
@@ -37,7 +65,7 @@ public class InternalStyleSheet implements StyleSheet
                 {
                     String name = nameAndValue[0].trim();
                     String value = nameAndValue[1].trim();
-                    mRules.get(selector).put(name, value);
+                    getCurrentMediaQuery().get(selector).put(name, value);
                 }
                 else
                 {
@@ -49,14 +77,14 @@ public class InternalStyleSheet implements StyleSheet
 
     public void removeRule(String selector)
     {
-        mRules.remove(selector);
+        getCurrentMediaQuery().remove(selector);
     }
 
     public void removeDeclaration(String selector, String declarationName)
     {
-        if(!TextUtils.isEmpty(selector) && mRules.containsKey(selector))
+        if(!TextUtils.isEmpty(selector) && getCurrentMediaQuery().containsKey(selector))
         {
-            mRules.get(selector).remove(declarationName);
+            getCurrentMediaQuery().get(selector).remove(declarationName);
         }
     }
 
@@ -64,9 +92,9 @@ public class InternalStyleSheet implements StyleSheet
     {
         if(!TextUtils.isEmpty(selector) && !TextUtils.isEmpty(declarationName))
         {
-            if(mRules.containsKey(selector) && mRules.get(selector).containsKey(declarationName))
+            if(getCurrentMediaQuery().containsKey(selector) && getCurrentMediaQuery().get(selector).containsKey(declarationName))
             {
-                mRules.get(selector).put(declarationName, newDeclarationValue);
+                getCurrentMediaQuery().get(selector).put(declarationName, newDeclarationValue);
             }
         }
     }
@@ -75,19 +103,33 @@ public class InternalStyleSheet implements StyleSheet
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
-
-        for(Map.Entry<String, Map<String, String>> e : mRules.entrySet())
+        for(Map.Entry<String, Map<String, Map<String, String>>> q : mRules.entrySet())
         {
-            sb.append(e.getKey());
-            sb.append(" {");
-            for(Map.Entry<String, String> declaration : e.getValue().entrySet())
+            if(!q.getKey().equals(NO_MEDIA_QUERY))
             {
-                sb.append(declaration.getKey());
-                sb.append(":");
-                sb.append(declaration.getValue());
-                sb.append(";");
+                sb.append("@media ");
+                sb.append(q.getKey());
+                sb.append(" {\n");
             }
-            sb.append("}\n");
+
+            for(Map.Entry<String, Map<String, String>> e : q.getValue().entrySet())
+            {
+                sb.append(e.getKey());
+                sb.append(" {");
+                for(Map.Entry<String, String> declaration : e.getValue().entrySet())
+                {
+                    sb.append(declaration.getKey());
+                    sb.append(":");
+                    sb.append(declaration.getValue());
+                    sb.append(";");
+                }
+                sb.append("}\n");
+            }
+
+            if(!q.getKey().equals(NO_MEDIA_QUERY))
+            {
+                sb.append("}\n");
+            }
         }
 
         return sb.toString();
