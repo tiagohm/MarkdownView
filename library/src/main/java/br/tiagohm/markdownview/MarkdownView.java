@@ -42,9 +42,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import br.tiagohm.markdownview.css.StyleSheet;
 import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
@@ -72,6 +74,7 @@ public class MarkdownView extends FrameLayout
             //.set(FootnoteExtension.FOOTNOTE_BACK_REF_STRING, "&#8593")
             ;
 
+    private final List<StyleSheet> mStyleSheets = new LinkedList<>();
     private WebView mWebView;
     private boolean mEscapeHtml = true;
 
@@ -134,6 +137,48 @@ public class MarkdownView extends FrameLayout
         return this;
     }
 
+    public MarkdownView addStyleSheet(StyleSheet s)
+    {
+        if(s != null)
+        {
+            mStyleSheets.add(s);
+        }
+
+        return this;
+    }
+
+    public MarkdownView replaceStyleSheet(StyleSheet oldStyle, StyleSheet newStyle)
+    {
+        if(oldStyle == newStyle)
+        {
+        }
+        else if(newStyle == null)
+        {
+            mStyleSheets.remove(oldStyle);
+        }
+        else
+        {
+            final int index = mStyleSheets.indexOf(oldStyle);
+
+            if(index >= 0)
+            {
+                mStyleSheets.set(index, newStyle);
+            }
+            else
+            {
+                mStyleSheets.add(newStyle);
+            }
+        }
+
+        return this;
+    }
+
+    public MarkdownView removeStyleSheet(StyleSheet s)
+    {
+        mStyleSheets.remove(s);
+        return this;
+    }
+
     private String parseBuildAndRender(String text)
     {
         Parser parser = Parser.builder(OPTIONS)
@@ -149,20 +194,22 @@ public class MarkdownView extends FrameLayout
         return renderer.render(parser.parse(text));
     }
 
-    public void loadMarkdown(String text, String cssPath)
+    public void loadMarkdown(String text)
     {
         String html = parseBuildAndRender(text);
 
         StringBuilder sb = new StringBuilder();
-        html = sb.append("<html>\n")
-                .append("<head>\n")
-                .append("<link rel=\"stylesheet\" href=\"file:///android_asset/css/default.css\">")
-                .append("<link rel=\"stylesheet\" href=\"")
-                .append(cssPath == null ? "" : cssPath)
-                .append("\" />\n")
-                .append("</head>\n")
-                .append("<body class=\"markdown-body\">\n")
+        sb.append("<html>\n");
+        sb.append("<head>\n");
+        for(StyleSheet s : mStyleSheets)
+        {
+            sb.append(s.toHTML());
+        }
+        sb.append("</head>\n");
+        sb.append("<body>\n")
+                .append("<div class=\"container\">\n")
                 .append(html)
+                .append("</div>\n")
                 .append("<span id='tooltip'></span>\n")
                 .append("<script type='text/javascript' src='file:///android_asset/js/jquery-3.1.1.min.js'></script>\n")
                 .append("<script type='text/javascript' src='file:///android_asset/js/markdownview.js'></script>\n")
@@ -171,7 +218,9 @@ public class MarkdownView extends FrameLayout
                 .append("<script type=\"text/x-mathjax-config\"> MathJax.Hub.Config({showProcessingMessages: false, messageStyle: 'none', showMathMenu: false, tex2jax: {inlineMath: [['$','$']]}});</script>\n")
                 .append("<script type=\"text/javascript\" src=\"https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML\"></script>\n")
                 .append("</body>\n")
-                .append("</html>").toString();
+                .append("</html>");
+
+        html = sb.toString();
 
         Logger.d(html);
 
@@ -182,25 +231,19 @@ public class MarkdownView extends FrameLayout
                 "");
     }
 
-    public void loadMarkdownFromAsset(String path, String cssPath)
+    public void loadMarkdownFromAsset(String path)
     {
-        loadMarkdown(Utils.getStringFromAssetFile(getContext().getAssets(), path), cssPath);
+        loadMarkdown(Utils.getStringFromAssetFile(getContext().getAssets(), path));
     }
 
-    public void loadMarkdownFromFile(File file, String cssPath)
+    public void loadMarkdownFromFile(File file)
     {
-        loadMarkdown(Utils.getStringFromFile(file), cssPath);
+        loadMarkdown(Utils.getStringFromFile(file));
     }
 
-    public void loadMarkdownFromUrl(String url, String cssPath)
+    public void loadMarkdownFromUrl(String url)
     {
-        new LoadMarkdownUrlTask().execute(url, cssPath);
-    }
-
-    public interface Styles
-    {
-        String GITHUB = "file:///android_asset/css/github.css";
-        String ELECTRON = "file:///android_asset/css/electron.css";
+        new LoadMarkdownUrlTask().execute(url);
     }
 
     public static class NodeRendererFactoryImpl implements NodeRendererFactory
@@ -270,13 +313,10 @@ public class MarkdownView extends FrameLayout
 
     private class LoadMarkdownUrlTask extends AsyncTask<String, Void, String>
     {
-        private String cssPath;
-
         @Override
         protected String doInBackground(String... params)
         {
             String url = params[0];
-            cssPath = params[1];
             InputStream is = null;
             try
             {
@@ -310,7 +350,7 @@ public class MarkdownView extends FrameLayout
         @Override
         protected void onPostExecute(String s)
         {
-            loadMarkdown(s, cssPath);
+            loadMarkdown(s);
         }
     }
 }
