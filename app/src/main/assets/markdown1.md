@@ -170,3 +170,8 @@ Duplicated footnote reference[^second].
 # Emoji
 
 :japanese_goblin::japanese_ogre::turkey::owl::jack_o_lantern::fish::rice_ball::space_invader::flag_br::cupid::telescope:
+
+# Video
+
+Japão Nosso De Cada Dia
+@[youtube](fM-J08X6l_Q)

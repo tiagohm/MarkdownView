@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 
@@ -51,6 +52,7 @@ import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
 import br.tiagohm.markdownview.ext.mathjax.MathJaxExtension;
+import br.tiagohm.markdownview.ext.video.VideoLinkExtension;
 
 public class MarkdownView extends FrameLayout
 {
@@ -64,7 +66,8 @@ public class MarkdownView extends FrameLayout
             KeystrokeExtension.create(),
             MathJaxExtension.create(),
             FootnoteExtension.create(),
-            EmojiExtension.create());
+            EmojiExtension.create(),
+            VideoLinkExtension.create());
 
     private final DataHolder OPTIONS = new MutableDataSet()
             .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
@@ -97,6 +100,7 @@ public class MarkdownView extends FrameLayout
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         try
         {
+            mWebView.setWebChromeClient(new WebChromeClient());
             mWebView.getSettings().setJavaScriptEnabled(true);
             mWebView.getSettings().setLoadsImagesAutomatically(true);
         }
