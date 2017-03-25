@@ -21,6 +21,7 @@ public class Github extends Bootstrap
                 "border-bottom-color: #959da5", "border-radius: 3px", "box-shadow: inset 0 -1px 0 #959da5");
 
         addRule(".footnotes li p:last-of-type", "display: inline");
+        addRule(".yt-player", "border: 2px solid #c51109");
 
         //Highlight.js
 
