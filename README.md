@@ -73,6 +73,17 @@ mMarkdownView.addStyleSheet(ExternalStyleSheet.fromAsset("github.css", null);
 mMarkdownView.addStyleSheet(ExternalStyleSheet.fromAsset("github2.css", "screen and (min-width: 1281px)");
 ```
 
+## Twitter
+
+#### Embed a Single Tweet
+From *https://twitter.com/RealGrumpyCat/status/845101936550469634*
+`#[tweet](845101936550469634)`
+`#[tweet-hide-cards](845101936550469634)`
+
+#### Follow Button
+From *https://twitter.com/tiag0hm*
+`#[follow](tiag0hm)`
+
 ## Themes
 * GitHub
 
@@ -104,6 +115,7 @@ mMarkdownView.addStyleSheet(ExternalStyleSheet.fromAsset("github2.css", "screen 
 - [x] Emoji ([EmojiOne](http://emojione.com)) `:smile:`
 - [x] Custom CSS
 - [x] Youtube `@[youtube](fM-J08X6l_Q)`
+- [x] Twitter
 
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/1.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/2.png'/>
@@ -112,6 +124,7 @@ mMarkdownView.addStyleSheet(ExternalStyleSheet.fromAsset("github2.css", "screen 
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/5.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/6.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/7.png'/>
+<img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/8.png'/>
 
 ## LICENSE
 ```
