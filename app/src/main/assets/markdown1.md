@@ -175,3 +175,12 @@ Duplicated footnote reference[^second].
 
 Japão Nosso De Cada Dia
 @[youtube](fM-J08X6l_Q)
+
+# Twitter
+
+### Embed a Single Tweet
+#[tweet](845101936550469634)
+#[tweet-hide-cards](845101936550469634)
+
+### Follow Button
+Seguir: #[follow](tiag0hm)
