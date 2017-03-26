@@ -11,15 +11,17 @@ public class Github extends Bootstrap
         addRule("h4", "font-size: 16px");
         addRule("h5", "font-size: 14px");
         addRule("h6", "font-size: 14px");
-        addRule("pre", "padding: 6px 10px", "border: 0", "border-radius: 3px", "background-color: #f6f8fa");
-        addRule("pre code", "line-height: 1.45", "background-color: #f6f8fa");
+        addRule("pre", "position: relative", "padding: 14px 10px", "border: 0", "border-radius: 3px", "background-color: #f6f8fa");
+        addRule("pre code", "position: relative", "line-height: 1.45", "background-color: transparent");
         addRule("table tr:nth-child(2n)", "background-color: #f6f8fa");
         addRule("table th", "padding: 6px 13px", "border: 1px solid #dfe2e5");
         addRule("table td", "padding: 6px 13px", "border: 1px solid #dfe2e5");
         addRule("kbd", "color: #444d56", "font-family: Consolas, \"Liberation Mono\", Menlo, Courier, monospace",
                 "background-color: #fcfcfc", "border: solid 1px #c6cbd1",
                 "border-bottom-color: #959da5", "border-radius: 3px", "box-shadow: inset 0 -1px 0 #959da5");
-
+        addRule("pre[language]::before", "content: attr(language)", "position: absolute", "top: 0", "right: 5px", "padding: 2px 1px",
+                "text-transform: uppercase", "color: #666", "font-size: 8.5px");
+        addRule("pre:not([language])", "padding: 6px 10px");
         addRule(".footnotes li p:last-of-type", "display: inline");
         addRule(".yt-player", "border: 2px solid #c51109");
 
