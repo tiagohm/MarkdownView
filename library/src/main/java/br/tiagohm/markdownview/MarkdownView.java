@@ -12,7 +12,9 @@ import android.widget.FrameLayout;
 
 import com.orhanobut.logger.Logger;
 import com.vladsch.flexmark.Extension;
+import com.vladsch.flexmark.ast.FencedCodeBlock;
 import com.vladsch.flexmark.ast.Image;
+import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.ast.util.TextCollectingVisitor;
 import com.vladsch.flexmark.ext.abbreviation.AbbreviationExtension;
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
@@ -20,9 +22,13 @@ import com.vladsch.flexmark.ext.footnotes.FootnoteExtension;
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughSubscriptExtension;
 import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
+import com.vladsch.flexmark.html.AttributeProvider;
+import com.vladsch.flexmark.html.AttributeProviderFactory;
 import com.vladsch.flexmark.html.CustomNodeRenderer;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.html.HtmlWriter;
+import com.vladsch.flexmark.html.IndependentAttributeProviderFactory;
+import com.vladsch.flexmark.html.renderer.AttributablePart;
 import com.vladsch.flexmark.html.renderer.LinkType;
 import com.vladsch.flexmark.html.renderer.NodeRenderer;
 import com.vladsch.flexmark.html.renderer.NodeRendererContext;
@@ -31,6 +37,7 @@ import com.vladsch.flexmark.html.renderer.NodeRenderingHandler;
 import com.vladsch.flexmark.html.renderer.ResolvedLink;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.superscript.SuperscriptExtension;
+import com.vladsch.flexmark.util.html.Attributes;
 import com.vladsch.flexmark.util.html.Escaping;
 import com.vladsch.flexmark.util.options.DataHolder;
 import com.vladsch.flexmark.util.options.MutableDataHolder;
@@ -193,6 +200,7 @@ public class MarkdownView extends FrameLayout
 
         HtmlRenderer renderer = HtmlRenderer.builder(OPTIONS)
                 .escapeHtml(mEscapeHtml)
+                .attributeProviderFactory(CustomAttributeProvider.Factory())
                 .nodeRendererFactory(new NodeRendererFactoryImpl())
                 .extensions(EXTENSIONS)
                 .build();
@@ -250,6 +258,35 @@ public class MarkdownView extends FrameLayout
     public void loadMarkdownFromUrl(String url)
     {
         new LoadMarkdownUrlTask().execute(url);
+    }
+
+    public static class CustomAttributeProvider implements AttributeProvider
+    {
+        public static AttributeProviderFactory Factory()
+        {
+            return new IndependentAttributeProviderFactory()
+            {
+                @Override
+                public AttributeProvider create(NodeRendererContext context)
+                {
+                    return new CustomAttributeProvider();
+                }
+            };
+        }
+
+        @Override
+        public void setAttributes(final Node node, final AttributablePart part, final Attributes attributes)
+        {
+            if(node instanceof FencedCodeBlock)
+            {
+                String language = ((FencedCodeBlock)node).getInfo().toString();
+                if(!TextUtils.isEmpty(language) &&
+                        !language.equals("nohighlight"))
+                {
+                    attributes.addValue("language", language);
+                }
+            }
+        }
     }
 
     public static class NodeRendererFactoryImpl implements NodeRendererFactory
