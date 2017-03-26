@@ -175,3 +175,12 @@ Duplicated footnote reference[^second].
 
 Wow
 @[youtube](g2ag8t7AvX8)
+
+# Twitter
+
+### Embed a Single Tweet
+#[tweet](845101936550469634)
+#[tweet-hide-cards](845101936550469634)
+
+### Follow Button
+Seguir: #[follow](tiag0hm)

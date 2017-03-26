@@ -52,6 +52,7 @@ import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
 import br.tiagohm.markdownview.ext.mathjax.MathJaxExtension;
+import br.tiagohm.markdownview.ext.twitter.TwitterExtension;
 import br.tiagohm.markdownview.ext.video.VideoLinkExtension;
 
 public class MarkdownView extends FrameLayout
@@ -67,7 +68,8 @@ public class MarkdownView extends FrameLayout
             MathJaxExtension.create(),
             FootnoteExtension.create(),
             EmojiExtension.create(),
-            VideoLinkExtension.create());
+            VideoLinkExtension.create(),
+            TwitterExtension.create());
 
     private final DataHolder OPTIONS = new MutableDataSet()
             .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
@@ -311,8 +313,6 @@ public class MarkdownView extends FrameLayout
                 }
             };
         }
-
-
     }
 
     private class LoadMarkdownUrlTask extends AsyncTask<String, Void, String>
