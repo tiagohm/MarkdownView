@@ -77,12 +77,12 @@ mMarkdownView.addStyleSheet(ExternalStyleSheet.fromAsset("github2.css", "screen 
 
 #### Embed a Single Tweet
 From *https://twitter.com/RealGrumpyCat/status/845101936550469634*
-`#[tweet](845101936550469634)`
-`#[tweet-hide-cards](845101936550469634)`
+* `#[tweet](845101936550469634)`
+* `#[tweet-hide-cards](845101936550469634)`
 
 #### Follow Button
 From *https://twitter.com/tiag0hm*
-`#[follow](tiag0hm)`
+* `#[follow](tiag0hm)`
 
 ## Themes
 * GitHub
