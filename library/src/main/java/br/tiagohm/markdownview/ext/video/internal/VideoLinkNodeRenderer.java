@@ -66,17 +66,19 @@ public class VideoLinkNodeRenderer implements NodeRenderer
         else if(!TextUtils.isEmpty(name))
         {
             ResolvedLink resolvedLink = context.resolveLink(LinkType.LINK, node.getUrl().unescape(), null);
-            html.attr("type", "text/html");
-            html.attr("frameborder", "0");
-
             if(name.equals("youtube") ||
                     name.equals("yt"))
             {
                 html.attr("class", "player yt-player");
+                html.withAttr().tag("div");
+                html.attr("type", "text/html");
+                html.attr("frameborder", "0");
+
                 html.attr("allowfullscreen", "");
                 html.attr("src", String.format("https://www.youtube.com/embed/%s", resolvedLink.getUrl()));
                 html.srcPos(node.getChars()).withAttr(resolvedLink).tag("iframe");
                 html.tag("/iframe");
+                html.tag("/div");
             }
             else
             {

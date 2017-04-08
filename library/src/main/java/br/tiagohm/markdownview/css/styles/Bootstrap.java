@@ -52,7 +52,8 @@ public abstract class Bootstrap extends InternalStyleSheet
         addRule(".task-list-item-checkbox", "vertical-align: middle", "margin: 0em 0.2em 0.25em -1.6em");
         addRule(".footnotes p", "margin: 0");
         addRule(".footnotes li", "margin-top: 2px", "margin-bottom: 2px");
-        addRule(".player", "border-radius: 5px", "width: 100%", "max-width: 100%", "height: auto", "margin-left: auto", "margin-right: auto");
+        addRule(".player", "position: relative", "padding-bottom: 56.25%", "padding-top: 25px", "height: 0");
+        addRule(".player iframe", "position: absolute", "top: 0", "left: 0", "width: 100%", "height: 100%");
         addRule(".twitter-follow-button", "vertical-align: middle");
         //IDs
         addRule("#tooltip", "position: fixed", "border-radius: 5px", "color: #fff", "background-color: #333", "left: 50%", "font-size: 90%", "padding: 5px 3px", "bottom: 5px", "text-align: center", "box-shadow: inset 0 -1px 0 rgba(0,0,0,0.25)", "display: none");
