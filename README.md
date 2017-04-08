@@ -63,10 +63,11 @@ mMarkdownView.setEmojiImageExtension("svg");
 ```java
 //InternalStyleSheet css = new InternalStyleSheet();
 InternalStyleSheet css = new Github();
+css.addFontFace("MyFont", "condensed", "italic", "bold", "url('myfont.ttf')");
 css.addMedia("screen and (min-width: 1281px)");
 css.addRule("h1", "color: orange");
 css.endMedia();
-css.addRule("h1", "color: green");
+css.addRule("h1", "color: green", "font-family: MyFont");
 mMarkdownView.addStyleSheet(css);
 
 mMarkdownView.addStyleSheet(ExternalStyleSheet.fromAsset("github.css", null);
