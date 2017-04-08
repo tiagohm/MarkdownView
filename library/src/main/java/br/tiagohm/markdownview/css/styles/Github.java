@@ -23,7 +23,7 @@ public class Github extends Bootstrap
                 "text-transform: uppercase", "color: #666", "font-size: 8.5px");
         addRule("pre:not([language])", "padding: 6px 10px");
         addRule(".footnotes li p:last-of-type", "display: inline");
-        addRule(".yt-player", "border: 2px solid #c51109");
+        addRule(".yt-player", "border: 10px solid #eee");
 
         //Highlight.js
 

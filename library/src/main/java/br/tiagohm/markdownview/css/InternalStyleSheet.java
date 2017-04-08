@@ -11,6 +11,7 @@ public class InternalStyleSheet implements StyleSheet
 {
     private static final String NO_MEDIA_QUERY = "NO_MEDIA_QUERY";
     private Map<String, Map<String, Map<String, String>>> mRules = new LinkedHashMap<>();
+    private Map<String, String> mFontFaces = new LinkedHashMap<>();
     private String currentMediaQuery;
 
     public InternalStyleSheet()
@@ -35,6 +36,27 @@ public class InternalStyleSheet implements StyleSheet
                 mRules.put(mediaQuery, new LinkedHashMap<String, Map<String, String>>());
                 currentMediaQuery = mediaQuery;
             }
+        }
+    }
+
+    public void addFontFace(String fontFamily, String fontStretch, String fontStyle, String fontWeight,
+                            String... src)
+    {
+        if(!TextUtils.isEmpty(fontFamily) && src.length > 0)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.append("font-family:").append(fontFamily).append(";");
+            sb.append("font-stretch:").append(TextUtils.isEmpty(fontStretch) ? "normal" : fontStretch).append(";");
+            sb.append("font-style:").append(TextUtils.isEmpty(fontStyle) ? "normal" : fontStyle).append(";");
+            sb.append("font-weight:").append(TextUtils.isEmpty(fontWeight) ? "normal" : fontWeight).append(";");
+            sb.append("src:");
+            for(int i = 0; i < src.length; i++)
+            {
+                sb.append(src[i]);
+                if(i < src.length - 1) sb.append(",");
+            }
+            sb.append(";");
+            mFontFaces.put(fontFamily.trim(), sb.toString());
         }
     }
 
@@ -103,6 +125,14 @@ public class InternalStyleSheet implements StyleSheet
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
+
+        for(Map.Entry<String,String> faces : mFontFaces.entrySet())
+        {
+            sb.append("@font-face {");
+            sb.append(faces.getValue());
+            sb.append("}\n");
+        }
+
         for(Map.Entry<String, Map<String, Map<String, String>>> q : mRules.entrySet())
         {
             if(!q.getKey().equals(NO_MEDIA_QUERY))
