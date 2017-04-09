@@ -67,6 +67,11 @@ import br.tiagohm.markdownview.js.JavaScript;
 
 public class MarkdownView extends FrameLayout
 {
+  public final static JavaScript JQUERY_3 = new ExternalScript("file:///android_asset/js/jquery-3.1.1.min.js", false, false);
+  public final static JavaScript HIGHLIGHTJS = new ExternalScript("file:///android_asset/js/highlight.js", false, true);
+  public final static JavaScript MARKDOWNVIEW = new ExternalScript("file:///android_asset/js/markdownview.js", false, true);
+  public final static JavaScript MATHJAX = new ExternalScript("https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML", false, true);
+
   private final static List<Extension> EXTENSIONS = Arrays.asList(TablesExtension.create(),
       TaskListExtension.create(),
       AbbreviationExtension.create(),
@@ -80,10 +85,7 @@ public class MarkdownView extends FrameLayout
       EmojiExtension.create(),
       VideoLinkExtension.create(),
       TwitterExtension.create());
-  private final static JavaScript JQUERY_3 = new ExternalScript("file:///android_asset/js/jquery-3.1.1.min.js", false, false);
-  private final static JavaScript HIGHLIGHTJS = new ExternalScript("file:///android_asset/js/highlight.js", false, true);
-  private final static JavaScript MARKDOWNVIEW = new ExternalScript("file:///android_asset/js/markdownview.js", false, true);
-  private final static JavaScript MATHJAX = new ExternalScript("https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML", false, true);
+
   private final DataHolder OPTIONS = new MutableDataSet()
       .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
       .set(FootnoteExtension.FOOTNOTE_REF_SUFFIX, "]")
@@ -91,6 +93,7 @@ public class MarkdownView extends FrameLayout
       .set(HtmlRenderer.FENCED_CODE_NO_LANGUAGE_CLASS, "nohighlight")
       //.set(FootnoteExtension.FOOTNOTE_BACK_REF_STRING, "&#8593")
       ;
+  
   private final List<StyleSheet> mStyleSheets = new LinkedList<>();
   private final HashSet<JavaScript> mScripts = new LinkedHashSet<>();
   private WebView mWebView;
