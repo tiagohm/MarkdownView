@@ -50,6 +50,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -61,6 +62,8 @@ import br.tiagohm.markdownview.ext.mark.MarkExtension;
 import br.tiagohm.markdownview.ext.mathjax.MathJaxExtension;
 import br.tiagohm.markdownview.ext.twitter.TwitterExtension;
 import br.tiagohm.markdownview.ext.video.VideoLinkExtension;
+import br.tiagohm.markdownview.js.ExternalScript;
+import br.tiagohm.markdownview.js.JavaScript;
 
 public class MarkdownView extends FrameLayout
 {
@@ -77,7 +80,10 @@ public class MarkdownView extends FrameLayout
       EmojiExtension.create(),
       VideoLinkExtension.create(),
       TwitterExtension.create());
-
+  private final static JavaScript JQUERY_3 = new ExternalScript("file:///android_asset/js/jquery-3.1.1.min.js", false, false);
+  private final static JavaScript HIGHLIGHTJS = new ExternalScript("file:///android_asset/js/highlight.js", false, true);
+  private final static JavaScript MARKDOWNVIEW = new ExternalScript("file:///android_asset/js/markdownview.js", false, true);
+  private final static JavaScript MATHJAX = new ExternalScript("https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML", false, true);
   private final DataHolder OPTIONS = new MutableDataSet()
       .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
       .set(FootnoteExtension.FOOTNOTE_REF_SUFFIX, "]")
@@ -85,8 +91,8 @@ public class MarkdownView extends FrameLayout
       .set(HtmlRenderer.FENCED_CODE_NO_LANGUAGE_CLASS, "nohighlight")
       //.set(FootnoteExtension.FOOTNOTE_BACK_REF_STRING, "&#8593")
       ;
-
   private final List<StyleSheet> mStyleSheets = new LinkedList<>();
+  private final HashSet<JavaScript> mScripts = new LinkedHashSet<>();
   private WebView mWebView;
   private boolean mEscapeHtml = true;
 
@@ -130,6 +136,11 @@ public class MarkdownView extends FrameLayout
     }
 
     addView(mWebView);
+
+    addJavascript(JQUERY_3);
+    addJavascript(HIGHLIGHTJS);
+    addJavascript(MATHJAX);
+    addJavascript(MARKDOWNVIEW);
   }
 
   public MarkdownView setEscapeHtml(boolean flag)
@@ -192,6 +203,18 @@ public class MarkdownView extends FrameLayout
     return this;
   }
 
+  public MarkdownView addJavascript(JavaScript js)
+  {
+    mScripts.add(js);
+    return this;
+  }
+
+  public MarkdownView removeJavaScript(JavaScript js)
+  {
+    mScripts.remove(js);
+    return this;
+  }
+
   private String parseBuildAndRender(String text)
   {
     Parser parser = Parser.builder(OPTIONS)
@@ -215,24 +238,25 @@ public class MarkdownView extends FrameLayout
     StringBuilder sb = new StringBuilder();
     sb.append("<html>\n");
     sb.append("<head>\n");
+
     for(StyleSheet s : mStyleSheets)
     {
       sb.append(s.toHTML());
     }
+
+    for(JavaScript js : mScripts)
+    {
+      sb.append(js.toHTML());
+    }
+
     sb.append("</head>\n");
-    sb.append("<body>\n")
-        .append("<div class=\"container\">\n")
-        .append(html)
-        .append("</div>\n")
-        .append("<span id='tooltip'></span>\n")
-        .append("<script type='text/javascript' src='file:///android_asset/js/jquery-3.1.1.min.js'></script>\n")
-        .append("<script type='text/javascript' src='file:///android_asset/js/markdownview.js'></script>\n")
-        .append("<script type='text/javascript' src='file:///android_asset/js/highlight.js'></script>\n")
-        .append("<script>hljs.initHighlightingOnLoad();</script>")
-        .append("<script type=\"text/x-mathjax-config\"> MathJax.Hub.Config({showProcessingMessages: false, messageStyle: 'none', showMathMenu: false, tex2jax: {inlineMath: [['$','$']]}});</script>\n")
-        .append("<script type=\"text/javascript\" src=\"https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML\"></script>\n")
-        .append("</body>\n")
-        .append("</html>");
+    sb.append("<body>\n");
+    sb.append("<div class=\"container\">\n");
+    sb.append(html);
+    sb.append("</div>\n");
+    sb.append("<span id='tooltip'></span>\n");
+    sb.append("</body>\n");
+    sb.append("</html>");
 
     html = sb.toString();
 
