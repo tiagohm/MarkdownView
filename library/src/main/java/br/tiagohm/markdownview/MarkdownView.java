@@ -23,7 +23,6 @@ import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughSubscriptExtensio
 import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.AttributeProvider;
-import com.vladsch.flexmark.html.AttributeProviderFactory;
 import com.vladsch.flexmark.html.CustomNodeRenderer;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.html.HtmlWriter;
@@ -59,6 +58,7 @@ import br.tiagohm.markdownview.css.StyleSheet;
 import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
+import br.tiagohm.markdownview.ext.mathjax.MathJax;
 import br.tiagohm.markdownview.ext.mathjax.MathJaxExtension;
 import br.tiagohm.markdownview.ext.twitter.TwitterExtension;
 import br.tiagohm.markdownview.ext.video.VideoLinkExtension;
@@ -71,6 +71,8 @@ public class MarkdownView extends FrameLayout
   public final static JavaScript HIGHLIGHTJS = new ExternalScript("file:///android_asset/js/highlight.js", false, true);
   public final static JavaScript MARKDOWNVIEW = new ExternalScript("file:///android_asset/js/markdownview.js", false, true);
   public final static JavaScript MATHJAX = new ExternalScript("https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML", false, true);
+  public final static JavaScript HIGHLIGHT_INIT = new ExternalScript("file:///android_asset/js/highlight-init.js", false, true);
+  public final static JavaScript MATHJAX_CONFIG = new ExternalScript("file:///android_asset/js/mathjax-config.js", false, true);
 
   private final static List<Extension> EXTENSIONS = Arrays.asList(TablesExtension.create(),
       TaskListExtension.create(),
@@ -93,7 +95,7 @@ public class MarkdownView extends FrameLayout
       .set(HtmlRenderer.FENCED_CODE_NO_LANGUAGE_CLASS, "nohighlight")
       //.set(FootnoteExtension.FOOTNOTE_BACK_REF_STRING, "&#8593")
       ;
-  
+
   private final List<StyleSheet> mStyleSheets = new LinkedList<>();
   private final HashSet<JavaScript> mScripts = new LinkedHashSet<>();
   private WebView mWebView;
@@ -141,8 +143,6 @@ public class MarkdownView extends FrameLayout
     addView(mWebView);
 
     addJavascript(JQUERY_3);
-    addJavascript(HIGHLIGHTJS);
-    addJavascript(MATHJAX);
     addJavascript(MARKDOWNVIEW);
   }
 
@@ -226,7 +226,14 @@ public class MarkdownView extends FrameLayout
 
     HtmlRenderer renderer = HtmlRenderer.builder(OPTIONS)
         .escapeHtml(mEscapeHtml)
-        .attributeProviderFactory(CustomAttributeProvider.Factory())
+        .attributeProviderFactory(new IndependentAttributeProviderFactory()
+        {
+          @Override
+          public AttributeProvider create(NodeRendererContext context)
+          {
+            return new CustomAttributeProvider();
+          }
+        })
         .nodeRendererFactory(new NodeRendererFactoryImpl())
         .extensions(EXTENSIONS)
         .build();
@@ -285,35 +292,6 @@ public class MarkdownView extends FrameLayout
   public void loadMarkdownFromUrl(String url)
   {
     new LoadMarkdownUrlTask().execute(url);
-  }
-
-  public static class CustomAttributeProvider implements AttributeProvider
-  {
-    public static AttributeProviderFactory Factory()
-    {
-      return new IndependentAttributeProviderFactory()
-      {
-        @Override
-        public AttributeProvider create(NodeRendererContext context)
-        {
-          return new CustomAttributeProvider();
-        }
-      };
-    }
-
-    @Override
-    public void setAttributes(final Node node, final AttributablePart part, final Attributes attributes)
-    {
-      if(node instanceof FencedCodeBlock)
-      {
-        String language = ((FencedCodeBlock)node).getInfo().toString();
-        if(!TextUtils.isEmpty(language) &&
-            !language.equals("nohighlight"))
-        {
-          attributes.addValue("language", language);
-        }
-      }
-    }
   }
 
   public static class NodeRendererFactoryImpl implements NodeRendererFactory
@@ -376,6 +354,31 @@ public class MarkdownView extends FrameLayout
           return set;
         }
       };
+    }
+  }
+
+  public class CustomAttributeProvider implements AttributeProvider
+  {
+    @Override
+    public void setAttributes(final Node node, final AttributablePart part, final Attributes attributes)
+    {
+      if(node instanceof FencedCodeBlock)
+      {
+        String language = ((FencedCodeBlock)node).getInfo().toString();
+        if(!TextUtils.isEmpty(language) &&
+            !language.equals("nohighlight"))
+        {
+          addJavascript(HIGHLIGHTJS);
+          addJavascript(HIGHLIGHT_INIT);
+
+          attributes.addValue("language", language);
+        }
+      }
+      else if(node instanceof MathJax)
+      {
+        addJavascript(MATHJAX);
+        addJavascript(MATHJAX_CONFIG);
+      }
     }
   }
 
