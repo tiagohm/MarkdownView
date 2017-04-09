@@ -16,6 +16,7 @@ import com.vladsch.flexmark.ast.FencedCodeBlock;
 import com.vladsch.flexmark.ast.Image;
 import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.ast.util.TextCollectingVisitor;
+import com.vladsch.flexmark.ext.abbreviation.Abbreviation;
 import com.vladsch.flexmark.ext.abbreviation.AbbreviationExtension;
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
 import com.vladsch.flexmark.ext.footnotes.FootnoteExtension;
@@ -54,6 +55,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import br.tiagohm.markdownview.css.ExternalStyleSheet;
 import br.tiagohm.markdownview.css.StyleSheet;
 import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
@@ -69,10 +71,13 @@ public class MarkdownView extends FrameLayout
 {
   public final static JavaScript JQUERY_3 = new ExternalScript("file:///android_asset/js/jquery-3.1.1.min.js", false, false);
   public final static JavaScript HIGHLIGHTJS = new ExternalScript("file:///android_asset/js/highlight.js", false, true);
-  public final static JavaScript MARKDOWNVIEW = new ExternalScript("file:///android_asset/js/markdownview.js", false, true);
   public final static JavaScript MATHJAX = new ExternalScript("https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML", false, true);
   public final static JavaScript HIGHLIGHT_INIT = new ExternalScript("file:///android_asset/js/highlight-init.js", false, true);
   public final static JavaScript MATHJAX_CONFIG = new ExternalScript("file:///android_asset/js/mathjax-config.js", false, true);
+  public final static JavaScript TOOLTIPSTER_JS = new ExternalScript("file:///android_asset/js/tooltipster.bundle.min.js", false, true);
+  public final static JavaScript TOOLTIPSTER_INIT = new ExternalScript("file:///android_asset/js/tooltipster-init.js", false, true);
+
+  public final static StyleSheet TOOLTIPSTER_CSS = new ExternalStyleSheet("file:///android_asset/css/tooltipster.bundle.min.css");
 
   private final static List<Extension> EXTENSIONS = Arrays.asList(TablesExtension.create(),
       TaskListExtension.create(),
@@ -143,7 +148,6 @@ public class MarkdownView extends FrameLayout
     addView(mWebView);
 
     addJavascript(JQUERY_3);
-    addJavascript(MARKDOWNVIEW);
   }
 
   public MarkdownView setEscapeHtml(boolean flag)
@@ -166,7 +170,7 @@ public class MarkdownView extends FrameLayout
 
   public MarkdownView addStyleSheet(StyleSheet s)
   {
-    if(s != null)
+    if(s != null && !mStyleSheets.contains(s))
     {
       mStyleSheets.add(s);
     }
@@ -193,7 +197,7 @@ public class MarkdownView extends FrameLayout
       }
       else
       {
-        mStyleSheets.add(newStyle);
+        addStyleSheet(newStyle);
       }
     }
 
@@ -264,7 +268,6 @@ public class MarkdownView extends FrameLayout
     sb.append("<div class=\"container\">\n");
     sb.append(html);
     sb.append("</div>\n");
-    sb.append("<span id='tooltip'></span>\n");
     sb.append("</body>\n");
     sb.append("</html>");
 
@@ -378,6 +381,13 @@ public class MarkdownView extends FrameLayout
       {
         addJavascript(MATHJAX);
         addJavascript(MATHJAX_CONFIG);
+      }
+      else if(node instanceof Abbreviation)
+      {
+        addJavascript(TOOLTIPSTER_JS);
+        addStyleSheet(TOOLTIPSTER_CSS);
+        addJavascript(TOOLTIPSTER_INIT);
+        attributes.addValue("class", "tooltip");
       }
     }
   }

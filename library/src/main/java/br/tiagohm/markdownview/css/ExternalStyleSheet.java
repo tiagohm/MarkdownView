@@ -53,7 +53,7 @@ public class ExternalStyleSheet implements StyleSheet
   @Override
   public String toHTML()
   {
-    return String.format("<link rel=\"stylesheet\" type=\"text/css\" media=\"%s\" href=\"%s\" />",
+    return String.format("<link rel=\"stylesheet\" type=\"text/css\" media=\"%s\" href=\"%s\" />\n",
         getMediaQuery() == null ? "" : getMediaQuery(),
         getUrl());
   }
