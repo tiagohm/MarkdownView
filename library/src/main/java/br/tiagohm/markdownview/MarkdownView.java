@@ -16,6 +16,7 @@ import com.vladsch.flexmark.ast.FencedCodeBlock;
 import com.vladsch.flexmark.ast.Image;
 import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.ast.util.TextCollectingVisitor;
+import com.vladsch.flexmark.ext.abbreviation.Abbreviation;
 import com.vladsch.flexmark.ext.abbreviation.AbbreviationExtension;
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
 import com.vladsch.flexmark.ext.footnotes.FootnoteExtension;
@@ -23,7 +24,6 @@ import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughSubscriptExtensio
 import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.AttributeProvider;
-import com.vladsch.flexmark.html.AttributeProviderFactory;
 import com.vladsch.flexmark.html.CustomNodeRenderer;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.html.HtmlWriter;
@@ -50,20 +50,35 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import br.tiagohm.markdownview.css.ExternalStyleSheet;
 import br.tiagohm.markdownview.css.StyleSheet;
 import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
+import br.tiagohm.markdownview.ext.mathjax.MathJax;
 import br.tiagohm.markdownview.ext.mathjax.MathJaxExtension;
 import br.tiagohm.markdownview.ext.twitter.TwitterExtension;
 import br.tiagohm.markdownview.ext.video.VideoLinkExtension;
+import br.tiagohm.markdownview.js.ExternalScript;
+import br.tiagohm.markdownview.js.JavaScript;
 
 public class MarkdownView extends FrameLayout
 {
+  public final static JavaScript JQUERY_3 = new ExternalScript("file:///android_asset/js/jquery-3.1.1.min.js", false, false);
+  public final static JavaScript HIGHLIGHTJS = new ExternalScript("file:///android_asset/js/highlight.js", false, true);
+  public final static JavaScript MATHJAX = new ExternalScript("https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML", false, true);
+  public final static JavaScript HIGHLIGHT_INIT = new ExternalScript("file:///android_asset/js/highlight-init.js", false, true);
+  public final static JavaScript MATHJAX_CONFIG = new ExternalScript("file:///android_asset/js/mathjax-config.js", false, true);
+  public final static JavaScript TOOLTIPSTER_JS = new ExternalScript("file:///android_asset/js/tooltipster.bundle.min.js", false, true);
+  public final static JavaScript TOOLTIPSTER_INIT = new ExternalScript("file:///android_asset/js/tooltipster-init.js", false, true);
+
+  public final static StyleSheet TOOLTIPSTER_CSS = new ExternalStyleSheet("file:///android_asset/css/tooltipster.bundle.min.css");
+
   private final static List<Extension> EXTENSIONS = Arrays.asList(TablesExtension.create(),
       TaskListExtension.create(),
       AbbreviationExtension.create(),
@@ -87,6 +102,7 @@ public class MarkdownView extends FrameLayout
       ;
 
   private final List<StyleSheet> mStyleSheets = new LinkedList<>();
+  private final HashSet<JavaScript> mScripts = new LinkedHashSet<>();
   private WebView mWebView;
   private boolean mEscapeHtml = true;
 
@@ -130,6 +146,8 @@ public class MarkdownView extends FrameLayout
     }
 
     addView(mWebView);
+
+    addJavascript(JQUERY_3);
   }
 
   public MarkdownView setEscapeHtml(boolean flag)
@@ -152,7 +170,7 @@ public class MarkdownView extends FrameLayout
 
   public MarkdownView addStyleSheet(StyleSheet s)
   {
-    if(s != null)
+    if(s != null && !mStyleSheets.contains(s))
     {
       mStyleSheets.add(s);
     }
@@ -179,7 +197,7 @@ public class MarkdownView extends FrameLayout
       }
       else
       {
-        mStyleSheets.add(newStyle);
+        addStyleSheet(newStyle);
       }
     }
 
@@ -192,6 +210,18 @@ public class MarkdownView extends FrameLayout
     return this;
   }
 
+  public MarkdownView addJavascript(JavaScript js)
+  {
+    mScripts.add(js);
+    return this;
+  }
+
+  public MarkdownView removeJavaScript(JavaScript js)
+  {
+    mScripts.remove(js);
+    return this;
+  }
+
   private String parseBuildAndRender(String text)
   {
     Parser parser = Parser.builder(OPTIONS)
@@ -200,7 +230,14 @@ public class MarkdownView extends FrameLayout
 
     HtmlRenderer renderer = HtmlRenderer.builder(OPTIONS)
         .escapeHtml(mEscapeHtml)
-        .attributeProviderFactory(CustomAttributeProvider.Factory())
+        .attributeProviderFactory(new IndependentAttributeProviderFactory()
+        {
+          @Override
+          public AttributeProvider create(NodeRendererContext context)
+          {
+            return new CustomAttributeProvider();
+          }
+        })
         .nodeRendererFactory(new NodeRendererFactoryImpl())
         .extensions(EXTENSIONS)
         .build();
@@ -215,24 +252,24 @@ public class MarkdownView extends FrameLayout
     StringBuilder sb = new StringBuilder();
     sb.append("<html>\n");
     sb.append("<head>\n");
+
     for(StyleSheet s : mStyleSheets)
     {
       sb.append(s.toHTML());
     }
+
+    for(JavaScript js : mScripts)
+    {
+      sb.append(js.toHTML());
+    }
+
     sb.append("</head>\n");
-    sb.append("<body>\n")
-        .append("<div class=\"container\">\n")
-        .append(html)
-        .append("</div>\n")
-        .append("<span id='tooltip'></span>\n")
-        .append("<script type='text/javascript' src='file:///android_asset/js/jquery-3.1.1.min.js'></script>\n")
-        .append("<script type='text/javascript' src='file:///android_asset/js/markdownview.js'></script>\n")
-        .append("<script type='text/javascript' src='file:///android_asset/js/highlight.js'></script>\n")
-        .append("<script>hljs.initHighlightingOnLoad();</script>")
-        .append("<script type=\"text/x-mathjax-config\"> MathJax.Hub.Config({showProcessingMessages: false, messageStyle: 'none', showMathMenu: false, tex2jax: {inlineMath: [['$','$']]}});</script>\n")
-        .append("<script type=\"text/javascript\" src=\"https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML\"></script>\n")
-        .append("</body>\n")
-        .append("</html>");
+    sb.append("<body>\n");
+    sb.append("<div class=\"container\">\n");
+    sb.append(html);
+    sb.append("</div>\n");
+    sb.append("</body>\n");
+    sb.append("</html>");
 
     html = sb.toString();
 
@@ -258,35 +295,6 @@ public class MarkdownView extends FrameLayout
   public void loadMarkdownFromUrl(String url)
   {
     new LoadMarkdownUrlTask().execute(url);
-  }
-
-  public static class CustomAttributeProvider implements AttributeProvider
-  {
-    public static AttributeProviderFactory Factory()
-    {
-      return new IndependentAttributeProviderFactory()
-      {
-        @Override
-        public AttributeProvider create(NodeRendererContext context)
-        {
-          return new CustomAttributeProvider();
-        }
-      };
-    }
-
-    @Override
-    public void setAttributes(final Node node, final AttributablePart part, final Attributes attributes)
-    {
-      if(node instanceof FencedCodeBlock)
-      {
-        String language = ((FencedCodeBlock)node).getInfo().toString();
-        if(!TextUtils.isEmpty(language) &&
-            !language.equals("nohighlight"))
-        {
-          attributes.addValue("language", language);
-        }
-      }
-    }
   }
 
   public static class NodeRendererFactoryImpl implements NodeRendererFactory
@@ -349,6 +357,38 @@ public class MarkdownView extends FrameLayout
           return set;
         }
       };
+    }
+  }
+
+  public class CustomAttributeProvider implements AttributeProvider
+  {
+    @Override
+    public void setAttributes(final Node node, final AttributablePart part, final Attributes attributes)
+    {
+      if(node instanceof FencedCodeBlock)
+      {
+        String language = ((FencedCodeBlock)node).getInfo().toString();
+        if(!TextUtils.isEmpty(language) &&
+            !language.equals("nohighlight"))
+        {
+          addJavascript(HIGHLIGHTJS);
+          addJavascript(HIGHLIGHT_INIT);
+
+          attributes.addValue("language", language);
+        }
+      }
+      else if(node instanceof MathJax)
+      {
+        addJavascript(MATHJAX);
+        addJavascript(MATHJAX_CONFIG);
+      }
+      else if(node instanceof Abbreviation)
+      {
+        addJavascript(TOOLTIPSTER_JS);
+        addStyleSheet(TOOLTIPSTER_CSS);
+        addJavascript(TOOLTIPSTER_INIT);
+        attributes.addValue("class", "tooltip");
+      }
     }
   }
 

@@ -56,7 +56,7 @@ public abstract class Bootstrap extends InternalStyleSheet
     addRule(".player iframe", "position: absolute", "top: 0", "left: 0", "width: 100%", "height: 100%");
     addRule(".twitter-follow-button", "vertical-align: middle");
     //IDs
-    addRule("#tooltip", "position: fixed", "border-radius: 5px", "color: #fff", "background-color: #333", "left: 50%", "font-size: 90%", "padding: 5px 3px", "bottom: 5px", "text-align: center", "box-shadow: inset 0 -1px 0 rgba(0,0,0,0.25)", "display: none");
+
     //Highlight.js
     addRule(".hljs", "display: block", "overflow-x: auto", "color: #4d4d4c", "padding: 0.5em");
     addRule(".hljs-type", "color: #880000");
