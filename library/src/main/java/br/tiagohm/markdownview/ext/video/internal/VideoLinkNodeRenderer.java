@@ -36,63 +36,63 @@ import br.tiagohm.markdownview.ext.video.VideoLink;
 public class VideoLinkNodeRenderer implements NodeRenderer
 {
 
-    public VideoLinkNodeRenderer(DataHolder options)
-    {
-    }
+  public VideoLinkNodeRenderer(DataHolder options)
+  {
+  }
 
+  @Override
+  public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers()
+  {
+    HashSet<NodeRenderingHandler<?>> set = new HashSet<>();
+    set.add(new NodeRenderingHandler<>(VideoLink.class, new CustomNodeRenderer<VideoLink>()
+    {
+      @Override
+      public void render(VideoLink node, NodeRendererContext context, HtmlWriter html)
+      {
+        VideoLinkNodeRenderer.this.render(node, context, html);
+      }
+    }));
+    return set;
+  }
+
+  private void render(final VideoLink node, final NodeRendererContext context, final HtmlWriter html)
+  {
+    final String name = node.getText().toString();
+
+    if(context.isDoNotRenderLinks())
+    {
+      context.renderChildren(node);
+    }
+    else if(!TextUtils.isEmpty(name))
+    {
+      ResolvedLink resolvedLink = context.resolveLink(LinkType.LINK, node.getUrl().unescape(), null);
+      if(name.equals("youtube") ||
+          name.equals("yt"))
+      {
+        html.attr("class", "player yt-player");
+        html.withAttr().tag("div");
+        html.attr("type", "text/html");
+        html.attr("frameborder", "0");
+
+        html.attr("allowfullscreen", "");
+        html.attr("src", String.format("https://www.youtube.com/embed/%s", resolvedLink.getUrl()));
+        html.srcPos(node.getChars()).withAttr(resolvedLink).tag("iframe");
+        html.tag("/iframe");
+        html.tag("/div");
+      }
+      else
+      {
+        context.renderChildren(node);
+      }
+    }
+  }
+
+  public static class Factory implements NodeRendererFactory
+  {
     @Override
-    public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers()
+    public NodeRenderer create(final DataHolder options)
     {
-        HashSet<NodeRenderingHandler<?>> set = new HashSet<>();
-        set.add(new NodeRenderingHandler<>(VideoLink.class, new CustomNodeRenderer<VideoLink>()
-        {
-            @Override
-            public void render(VideoLink node, NodeRendererContext context, HtmlWriter html)
-            {
-                VideoLinkNodeRenderer.this.render(node, context, html);
-            }
-        }));
-        return set;
+      return new VideoLinkNodeRenderer(options);
     }
-
-    private void render(final VideoLink node, final NodeRendererContext context, final HtmlWriter html)
-    {
-        final String name = node.getText().toString();
-
-        if(context.isDoNotRenderLinks())
-        {
-            context.renderChildren(node);
-        }
-        else if(!TextUtils.isEmpty(name))
-        {
-            ResolvedLink resolvedLink = context.resolveLink(LinkType.LINK, node.getUrl().unescape(), null);
-            if(name.equals("youtube") ||
-                    name.equals("yt"))
-            {
-                html.attr("class", "player yt-player");
-                html.withAttr().tag("div");
-                html.attr("type", "text/html");
-                html.attr("frameborder", "0");
-
-                html.attr("allowfullscreen", "");
-                html.attr("src", String.format("https://www.youtube.com/embed/%s", resolvedLink.getUrl()));
-                html.srcPos(node.getChars()).withAttr(resolvedLink).tag("iframe");
-                html.tag("/iframe");
-                html.tag("/div");
-            }
-            else
-            {
-                context.renderChildren(node);
-            }
-        }
-    }
-
-    public static class Factory implements NodeRendererFactory
-    {
-        @Override
-        public NodeRenderer create(final DataHolder options)
-        {
-            return new VideoLinkNodeRenderer(options);
-        }
-    }
+  }
 }

@@ -64,334 +64,334 @@ import br.tiagohm.markdownview.ext.video.VideoLinkExtension;
 
 public class MarkdownView extends FrameLayout
 {
-    private final static List<Extension> EXTENSIONS = Arrays.asList(TablesExtension.create(),
-            TaskListExtension.create(),
-            AbbreviationExtension.create(),
-            AutolinkExtension.create(),
-            MarkExtension.create(),
-            StrikethroughSubscriptExtension.create(),
-            SuperscriptExtension.create(),
-            KeystrokeExtension.create(),
-            MathJaxExtension.create(),
-            FootnoteExtension.create(),
-            EmojiExtension.create(),
-            VideoLinkExtension.create(),
-            TwitterExtension.create());
+  private final static List<Extension> EXTENSIONS = Arrays.asList(TablesExtension.create(),
+      TaskListExtension.create(),
+      AbbreviationExtension.create(),
+      AutolinkExtension.create(),
+      MarkExtension.create(),
+      StrikethroughSubscriptExtension.create(),
+      SuperscriptExtension.create(),
+      KeystrokeExtension.create(),
+      MathJaxExtension.create(),
+      FootnoteExtension.create(),
+      EmojiExtension.create(),
+      VideoLinkExtension.create(),
+      TwitterExtension.create());
 
-    private final DataHolder OPTIONS = new MutableDataSet()
-            .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
-            .set(FootnoteExtension.FOOTNOTE_REF_SUFFIX, "]")
-            .set(HtmlRenderer.FENCED_CODE_LANGUAGE_CLASS_PREFIX, "")
-            .set(HtmlRenderer.FENCED_CODE_NO_LANGUAGE_CLASS, "nohighlight")
-            //.set(FootnoteExtension.FOOTNOTE_BACK_REF_STRING, "&#8593")
-            ;
+  private final DataHolder OPTIONS = new MutableDataSet()
+      .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
+      .set(FootnoteExtension.FOOTNOTE_REF_SUFFIX, "]")
+      .set(HtmlRenderer.FENCED_CODE_LANGUAGE_CLASS_PREFIX, "")
+      .set(HtmlRenderer.FENCED_CODE_NO_LANGUAGE_CLASS, "nohighlight")
+      //.set(FootnoteExtension.FOOTNOTE_BACK_REF_STRING, "&#8593")
+      ;
 
-    private final List<StyleSheet> mStyleSheets = new LinkedList<>();
-    private WebView mWebView;
-    private boolean mEscapeHtml = true;
+  private final List<StyleSheet> mStyleSheets = new LinkedList<>();
+  private WebView mWebView;
+  private boolean mEscapeHtml = true;
 
-    public MarkdownView(Context context)
+  public MarkdownView(Context context)
+  {
+    this(context, null);
+  }
+
+  public MarkdownView(Context context, AttributeSet attrs)
+  {
+    this(context, attrs, 0);
+  }
+
+  public MarkdownView(Context context, AttributeSet attrs, int defStyleAttr)
+  {
+    super(context, attrs, defStyleAttr);
+
+    mWebView = new WebView(context, null, 0);
+    mWebView.setLayoutParams(new FrameLayout.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    try
     {
-        this(context, null);
+      mWebView.setWebChromeClient(new WebChromeClient());
+      mWebView.getSettings().setJavaScriptEnabled(true);
+      mWebView.getSettings().setLoadsImagesAutomatically(true);
+    }
+    catch(Exception e)
+    {
+      e.printStackTrace();
     }
 
-    public MarkdownView(Context context, AttributeSet attrs)
+    try
     {
-        this(context, attrs, 0);
+      TypedArray attr = getContext().obtainStyledAttributes(attrs, R.styleable.MarkdownView);
+      mEscapeHtml = attr.getBoolean(R.styleable.MarkdownView_escapeHtml, true);
+      attr.recycle();
+    }
+    catch(Exception e)
+    {
+      e.printStackTrace();
     }
 
-    public MarkdownView(Context context, AttributeSet attrs, int defStyleAttr)
-    {
-        super(context, attrs, defStyleAttr);
+    addView(mWebView);
+  }
 
-        mWebView = new WebView(context, null, 0);
-        mWebView.setLayoutParams(new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        try
+  public MarkdownView setEscapeHtml(boolean flag)
+  {
+    mEscapeHtml = flag;
+    return this;
+  }
+
+  public MarkdownView setEmojiRootPath(String path)
+  {
+    ((MutableDataHolder)OPTIONS).set(EmojiExtension.ROOT_IMAGE_PATH, path);
+    return this;
+  }
+
+  public MarkdownView setEmojiImageExtension(String ext)
+  {
+    ((MutableDataHolder)OPTIONS).set(EmojiExtension.IMAGE_EXT, ext);
+    return this;
+  }
+
+  public MarkdownView addStyleSheet(StyleSheet s)
+  {
+    if(s != null)
+    {
+      mStyleSheets.add(s);
+    }
+
+    return this;
+  }
+
+  public MarkdownView replaceStyleSheet(StyleSheet oldStyle, StyleSheet newStyle)
+  {
+    if(oldStyle == newStyle)
+    {
+    }
+    else if(newStyle == null)
+    {
+      mStyleSheets.remove(oldStyle);
+    }
+    else
+    {
+      final int index = mStyleSheets.indexOf(oldStyle);
+
+      if(index >= 0)
+      {
+        mStyleSheets.set(index, newStyle);
+      }
+      else
+      {
+        mStyleSheets.add(newStyle);
+      }
+    }
+
+    return this;
+  }
+
+  public MarkdownView removeStyleSheet(StyleSheet s)
+  {
+    mStyleSheets.remove(s);
+    return this;
+  }
+
+  private String parseBuildAndRender(String text)
+  {
+    Parser parser = Parser.builder(OPTIONS)
+        .extensions(EXTENSIONS)
+        .build();
+
+    HtmlRenderer renderer = HtmlRenderer.builder(OPTIONS)
+        .escapeHtml(mEscapeHtml)
+        .attributeProviderFactory(CustomAttributeProvider.Factory())
+        .nodeRendererFactory(new NodeRendererFactoryImpl())
+        .extensions(EXTENSIONS)
+        .build();
+
+    return renderer.render(parser.parse(text));
+  }
+
+  public void loadMarkdown(String text)
+  {
+    String html = parseBuildAndRender(text);
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("<html>\n");
+    sb.append("<head>\n");
+    for(StyleSheet s : mStyleSheets)
+    {
+      sb.append(s.toHTML());
+    }
+    sb.append("</head>\n");
+    sb.append("<body>\n")
+        .append("<div class=\"container\">\n")
+        .append(html)
+        .append("</div>\n")
+        .append("<span id='tooltip'></span>\n")
+        .append("<script type='text/javascript' src='file:///android_asset/js/jquery-3.1.1.min.js'></script>\n")
+        .append("<script type='text/javascript' src='file:///android_asset/js/markdownview.js'></script>\n")
+        .append("<script type='text/javascript' src='file:///android_asset/js/highlight.js'></script>\n")
+        .append("<script>hljs.initHighlightingOnLoad();</script>")
+        .append("<script type=\"text/x-mathjax-config\"> MathJax.Hub.Config({showProcessingMessages: false, messageStyle: 'none', showMathMenu: false, tex2jax: {inlineMath: [['$','$']]}});</script>\n")
+        .append("<script type=\"text/javascript\" src=\"https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML\"></script>\n")
+        .append("</body>\n")
+        .append("</html>");
+
+    html = sb.toString();
+
+    Logger.d(html);
+
+    mWebView.loadDataWithBaseURL("",
+        html,
+        "text/html",
+        "UTF-8",
+        "");
+  }
+
+  public void loadMarkdownFromAsset(String path)
+  {
+    loadMarkdown(Utils.getStringFromAssetFile(getContext().getAssets(), path));
+  }
+
+  public void loadMarkdownFromFile(File file)
+  {
+    loadMarkdown(Utils.getStringFromFile(file));
+  }
+
+  public void loadMarkdownFromUrl(String url)
+  {
+    new LoadMarkdownUrlTask().execute(url);
+  }
+
+  public static class CustomAttributeProvider implements AttributeProvider
+  {
+    public static AttributeProviderFactory Factory()
+    {
+      return new IndependentAttributeProviderFactory()
+      {
+        @Override
+        public AttributeProvider create(NodeRendererContext context)
         {
-            mWebView.setWebChromeClient(new WebChromeClient());
-            mWebView.getSettings().setJavaScriptEnabled(true);
-            mWebView.getSettings().setLoadsImagesAutomatically(true);
+          return new CustomAttributeProvider();
         }
-        catch(Exception e)
+      };
+    }
+
+    @Override
+    public void setAttributes(final Node node, final AttributablePart part, final Attributes attributes)
+    {
+      if(node instanceof FencedCodeBlock)
+      {
+        String language = ((FencedCodeBlock)node).getInfo().toString();
+        if(!TextUtils.isEmpty(language) &&
+            !language.equals("nohighlight"))
         {
+          attributes.addValue("language", language);
+        }
+      }
+    }
+  }
+
+  public static class NodeRendererFactoryImpl implements NodeRendererFactory
+  {
+    @Override
+    public NodeRenderer create(DataHolder options)
+    {
+      return new NodeRenderer()
+      {
+        @Override
+        public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers()
+        {
+          HashSet<NodeRenderingHandler<?>> set = new HashSet<>();
+          set.add(new NodeRenderingHandler<>(Image.class, new CustomNodeRenderer<Image>()
+          {
+            @Override
+            public void render(Image node, NodeRendererContext context, HtmlWriter html)
+            {
+              if(!context.isDoNotRenderLinks())
+              {
+                String altText = new TextCollectingVisitor().collectAndGetText(node);
+
+                ResolvedLink resolvedLink = context.resolveLink(LinkType.IMAGE, node.getUrl().unescape(), null);
+                String url = resolvedLink.getUrl();
+
+                if(!node.getUrlContent().isEmpty())
+                {
+                  // reverse URL encoding of =, &
+                  String content = Escaping.percentEncodeUrl(node.getUrlContent()).replace("+", "%2B").replace("%3D", "=").replace("%26", "&amp;");
+                  url += content;
+                }
+
+                final int index = url.indexOf('@');
+
+                if(index >= 0)
+                {
+                  String[] dimensions = url.substring(index + 1, url.length()).split("\\|");
+                  url = url.substring(0, index);
+
+                  if(dimensions.length == 2)
+                  {
+                    String width = TextUtils.isEmpty(dimensions[0]) ? "auto" : dimensions[0];
+                    String height = TextUtils.isEmpty(dimensions[1]) ? "auto" : dimensions[1];
+                    html.attr("style", "width: " + width + "; height: " + height);
+                  }
+                }
+
+                html.attr("src", url);
+                html.attr("alt", altText);
+
+                if(node.getTitle().isNotNull())
+                {
+                  html.attr("title", node.getTitle().unescape());
+                }
+
+                html.srcPos(node.getChars()).withAttr(resolvedLink).tagVoid("img");
+              }
+            }
+          }));
+          return set;
+        }
+      };
+    }
+  }
+
+  private class LoadMarkdownUrlTask extends AsyncTask<String, Void, String>
+  {
+    @Override
+    protected String doInBackground(String... params)
+    {
+      String url = params[0];
+      InputStream is = null;
+      try
+      {
+        URLConnection connection = new URL(url).openConnection();
+        connection.setReadTimeout(5000);
+        connection.setConnectTimeout(5000);
+        connection.setRequestProperty("Accept-Charset", "UTF-8");
+        return Utils.getStringFromInputStream(is = connection.getInputStream());
+      }
+      catch(Exception e)
+      {
+        e.printStackTrace();
+        return "";
+      }
+      finally
+      {
+        if(is != null)
+        {
+          try
+          {
+            is.close();
+          }
+          catch(IOException e)
+          {
             e.printStackTrace();
+          }
         }
-
-        try
-        {
-            TypedArray attr = getContext().obtainStyledAttributes(attrs, R.styleable.MarkdownView);
-            mEscapeHtml = attr.getBoolean(R.styleable.MarkdownView_escapeHtml, true);
-            attr.recycle();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        addView(mWebView);
+      }
     }
 
-    public MarkdownView setEscapeHtml(boolean flag)
+    @Override
+    protected void onPostExecute(String s)
     {
-        mEscapeHtml = flag;
-        return this;
+      loadMarkdown(s);
     }
-
-    public MarkdownView setEmojiRootPath(String path)
-    {
-        ((MutableDataHolder)OPTIONS).set(EmojiExtension.ROOT_IMAGE_PATH, path);
-        return this;
-    }
-
-    public MarkdownView setEmojiImageExtension(String ext)
-    {
-        ((MutableDataHolder)OPTIONS).set(EmojiExtension.IMAGE_EXT, ext);
-        return this;
-    }
-
-    public MarkdownView addStyleSheet(StyleSheet s)
-    {
-        if(s != null)
-        {
-            mStyleSheets.add(s);
-        }
-
-        return this;
-    }
-
-    public MarkdownView replaceStyleSheet(StyleSheet oldStyle, StyleSheet newStyle)
-    {
-        if(oldStyle == newStyle)
-        {
-        }
-        else if(newStyle == null)
-        {
-            mStyleSheets.remove(oldStyle);
-        }
-        else
-        {
-            final int index = mStyleSheets.indexOf(oldStyle);
-
-            if(index >= 0)
-            {
-                mStyleSheets.set(index, newStyle);
-            }
-            else
-            {
-                mStyleSheets.add(newStyle);
-            }
-        }
-
-        return this;
-    }
-
-    public MarkdownView removeStyleSheet(StyleSheet s)
-    {
-        mStyleSheets.remove(s);
-        return this;
-    }
-
-    private String parseBuildAndRender(String text)
-    {
-        Parser parser = Parser.builder(OPTIONS)
-                .extensions(EXTENSIONS)
-                .build();
-
-        HtmlRenderer renderer = HtmlRenderer.builder(OPTIONS)
-                .escapeHtml(mEscapeHtml)
-                .attributeProviderFactory(CustomAttributeProvider.Factory())
-                .nodeRendererFactory(new NodeRendererFactoryImpl())
-                .extensions(EXTENSIONS)
-                .build();
-
-        return renderer.render(parser.parse(text));
-    }
-
-    public void loadMarkdown(String text)
-    {
-        String html = parseBuildAndRender(text);
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("<html>\n");
-        sb.append("<head>\n");
-        for(StyleSheet s : mStyleSheets)
-        {
-            sb.append(s.toHTML());
-        }
-        sb.append("</head>\n");
-        sb.append("<body>\n")
-                .append("<div class=\"container\">\n")
-                .append(html)
-                .append("</div>\n")
-                .append("<span id='tooltip'></span>\n")
-                .append("<script type='text/javascript' src='file:///android_asset/js/jquery-3.1.1.min.js'></script>\n")
-                .append("<script type='text/javascript' src='file:///android_asset/js/markdownview.js'></script>\n")
-                .append("<script type='text/javascript' src='file:///android_asset/js/highlight.js'></script>\n")
-                .append("<script>hljs.initHighlightingOnLoad();</script>")
-                .append("<script type=\"text/x-mathjax-config\"> MathJax.Hub.Config({showProcessingMessages: false, messageStyle: 'none', showMathMenu: false, tex2jax: {inlineMath: [['$','$']]}});</script>\n")
-                .append("<script type=\"text/javascript\" src=\"https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML\"></script>\n")
-                .append("</body>\n")
-                .append("</html>");
-
-        html = sb.toString();
-
-        Logger.d(html);
-
-        mWebView.loadDataWithBaseURL("",
-                html,
-                "text/html",
-                "UTF-8",
-                "");
-    }
-
-    public void loadMarkdownFromAsset(String path)
-    {
-        loadMarkdown(Utils.getStringFromAssetFile(getContext().getAssets(), path));
-    }
-
-    public void loadMarkdownFromFile(File file)
-    {
-        loadMarkdown(Utils.getStringFromFile(file));
-    }
-
-    public void loadMarkdownFromUrl(String url)
-    {
-        new LoadMarkdownUrlTask().execute(url);
-    }
-
-    public static class CustomAttributeProvider implements AttributeProvider
-    {
-        public static AttributeProviderFactory Factory()
-        {
-            return new IndependentAttributeProviderFactory()
-            {
-                @Override
-                public AttributeProvider create(NodeRendererContext context)
-                {
-                    return new CustomAttributeProvider();
-                }
-            };
-        }
-
-        @Override
-        public void setAttributes(final Node node, final AttributablePart part, final Attributes attributes)
-        {
-            if(node instanceof FencedCodeBlock)
-            {
-                String language = ((FencedCodeBlock)node).getInfo().toString();
-                if(!TextUtils.isEmpty(language) &&
-                        !language.equals("nohighlight"))
-                {
-                    attributes.addValue("language", language);
-                }
-            }
-        }
-    }
-
-    public static class NodeRendererFactoryImpl implements NodeRendererFactory
-    {
-        @Override
-        public NodeRenderer create(DataHolder options)
-        {
-            return new NodeRenderer()
-            {
-                @Override
-                public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers()
-                {
-                    HashSet<NodeRenderingHandler<?>> set = new HashSet<>();
-                    set.add(new NodeRenderingHandler<>(Image.class, new CustomNodeRenderer<Image>()
-                    {
-                        @Override
-                        public void render(Image node, NodeRendererContext context, HtmlWriter html)
-                        {
-                            if(!context.isDoNotRenderLinks())
-                            {
-                                String altText = new TextCollectingVisitor().collectAndGetText(node);
-
-                                ResolvedLink resolvedLink = context.resolveLink(LinkType.IMAGE, node.getUrl().unescape(), null);
-                                String url = resolvedLink.getUrl();
-
-                                if(!node.getUrlContent().isEmpty())
-                                {
-                                    // reverse URL encoding of =, &
-                                    String content = Escaping.percentEncodeUrl(node.getUrlContent()).replace("+", "%2B").replace("%3D", "=").replace("%26", "&amp;");
-                                    url += content;
-                                }
-
-                                final int index = url.indexOf('@');
-
-                                if(index >= 0)
-                                {
-                                    String[] dimensions = url.substring(index + 1, url.length()).split("\\|");
-                                    url = url.substring(0, index);
-
-                                    if(dimensions.length == 2)
-                                    {
-                                        String width = TextUtils.isEmpty(dimensions[0]) ? "auto" : dimensions[0];
-                                        String height = TextUtils.isEmpty(dimensions[1]) ? "auto" : dimensions[1];
-                                        html.attr("style", "width: " + width + "; height: " + height);
-                                    }
-                                }
-
-                                html.attr("src", url);
-                                html.attr("alt", altText);
-
-                                if(node.getTitle().isNotNull())
-                                {
-                                    html.attr("title", node.getTitle().unescape());
-                                }
-
-                                html.srcPos(node.getChars()).withAttr(resolvedLink).tagVoid("img");
-                            }
-                        }
-                    }));
-                    return set;
-                }
-            };
-        }
-    }
-
-    private class LoadMarkdownUrlTask extends AsyncTask<String, Void, String>
-    {
-        @Override
-        protected String doInBackground(String... params)
-        {
-            String url = params[0];
-            InputStream is = null;
-            try
-            {
-                URLConnection connection = new URL(url).openConnection();
-                connection.setReadTimeout(5000);
-                connection.setConnectTimeout(5000);
-                connection.setRequestProperty("Accept-Charset", "UTF-8");
-                return Utils.getStringFromInputStream(is = connection.getInputStream());
-            }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-                return "";
-            }
-            finally
-            {
-                if(is != null)
-                {
-                    try
-                    {
-                        is.close();
-                    }
-                    catch(IOException e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String s)
-        {
-            loadMarkdown(s);
-        }
-    }
+  }
 }

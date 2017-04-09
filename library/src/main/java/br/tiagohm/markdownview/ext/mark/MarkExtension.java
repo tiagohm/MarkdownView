@@ -13,48 +13,48 @@ import br.tiagohm.markdownview.ext.mark.internal.MarkNodeRenderer;
 
 public class MarkExtension implements Parser.ParserExtension, HtmlRenderer.HtmlRendererExtension
 {
-    private MarkExtension()
+  private MarkExtension()
+  {
+  }
+
+  public static Extension create()
+  {
+    return new MarkExtension();
+  }
+
+  @Override
+  public void rendererOptions(final MutableDataHolder options)
+  {
+
+  }
+
+  @Override
+  public void parserOptions(final MutableDataHolder options)
+  {
+
+  }
+
+  @Override
+  public void extend(Parser.Builder parserBuilder)
+  {
+    parserBuilder.customDelimiterProcessor(new MarkDelimiterProcessor());
+  }
+
+  @Override
+  public void extend(HtmlRenderer.Builder rendererBuilder, String rendererType)
+  {
+    switch(rendererType)
     {
-    }
-
-    public static Extension create()
-    {
-        return new MarkExtension();
-    }
-
-    @Override
-    public void rendererOptions(final MutableDataHolder options)
-    {
-
-    }
-
-    @Override
-    public void parserOptions(final MutableDataHolder options)
-    {
-
-    }
-
-    @Override
-    public void extend(Parser.Builder parserBuilder)
-    {
-        parserBuilder.customDelimiterProcessor(new MarkDelimiterProcessor());
-    }
-
-    @Override
-    public void extend(HtmlRenderer.Builder rendererBuilder, String rendererType)
-    {
-        switch(rendererType)
+      case "HTML":
+        rendererBuilder.nodeRendererFactory(new NodeRendererFactory()
         {
-            case "HTML":
-                rendererBuilder.nodeRendererFactory(new NodeRendererFactory()
-                {
-                    @Override
-                    public NodeRenderer create(DataHolder options)
-                    {
-                        return new MarkNodeRenderer(options);
-                    }
-                });
-                break;
-        }
+          @Override
+          public NodeRenderer create(DataHolder options)
+          {
+            return new MarkNodeRenderer(options);
+          }
+        });
+        break;
     }
+  }
 }

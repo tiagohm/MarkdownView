@@ -10,39 +10,39 @@ import br.tiagohm.markdownview.ext.video.internal.VideoLinkNodeRenderer;
 
 public class VideoLinkExtension implements Parser.ParserExtension, HtmlRenderer.HtmlRendererExtension
 {
-    private VideoLinkExtension()
+  private VideoLinkExtension()
+  {
+  }
+
+  public static Extension create()
+  {
+    return new VideoLinkExtension();
+  }
+
+  @Override
+  public void extend(Parser.Builder parserBuilder)
+  {
+    parserBuilder.postProcessorFactory(new VideoLinkNodePostProcessor.Factory(parserBuilder));
+  }
+
+  @Override
+  public void rendererOptions(final MutableDataHolder options)
+  {
+
+  }
+
+  @Override
+  public void parserOptions(final MutableDataHolder options)
+  {
+
+  }
+
+  @Override
+  public void extend(HtmlRenderer.Builder rendererBuilder, String rendererType)
+  {
+    if(rendererType.equals("HTML"))
     {
+      rendererBuilder.nodeRendererFactory(new VideoLinkNodeRenderer.Factory());
     }
-
-    public static Extension create()
-    {
-        return new VideoLinkExtension();
-    }
-
-    @Override
-    public void extend(Parser.Builder parserBuilder)
-    {
-        parserBuilder.postProcessorFactory(new VideoLinkNodePostProcessor.Factory(parserBuilder));
-    }
-
-    @Override
-    public void rendererOptions(final MutableDataHolder options)
-    {
-
-    }
-
-    @Override
-    public void parserOptions(final MutableDataHolder options)
-    {
-
-    }
-
-    @Override
-    public void extend(HtmlRenderer.Builder rendererBuilder, String rendererType)
-    {
-        if(rendererType.equals("HTML"))
-        {
-            rendererBuilder.nodeRendererFactory(new VideoLinkNodeRenderer.Factory());
-        }
-    }
+  }
 }
