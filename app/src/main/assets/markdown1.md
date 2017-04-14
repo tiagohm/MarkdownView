@@ -42,7 +42,7 @@ Links can be either inline with the text, or placed at the bottom of the text as
 
 Link text is enclosed by square brackets [], and for inline links, the link URL is enclosed by parens ().
 
-[Google](https://www.google.com)
+[Gooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooogle](https://www.google.com)
 
 # Images
 Images are almost identical to links, but an image starts with an exclamation point !.
@@ -184,3 +184,7 @@ Japão Nosso De Cada Dia
 
 ### Follow Button
 Seguir: #[follow](tiag0hm)
+
+# Label
+
+--DEFAULT-- ---SUCCESS--- ----WARNING---- -----DANGER-----
