@@ -19,7 +19,7 @@ public abstract class Bootstrap extends InternalStyleSheet
     addRule("p", "margin: 0 0 10px");
     addRule("strong", "font-weight: 700");
     addRule("em", "font-style: italic");
-    addRule("a", "color: #337ab7", "text-decoration: none");
+    addRule("a", "color: #337ab7", "text-decoration: none", "word-wrap: break-word");
     addRule("img", "vertical-align: middle", "border: 0");
     addRule("code", "padding: 2px 4px", "font-size: 90%", "color: #c7254e", "background-color: #f9f2f4", "white-space: nowrap", "border-radius: 4px", "font-family: Menlo,Monaco,Consolas,\"Courier New\",monospace");
     addRule("pre code", "padding: 0", "white-wrap: pre-wrap", "white-space: pre", "background-color: transparent", "border-radius: 0");
