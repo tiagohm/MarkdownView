@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
@@ -57,6 +58,7 @@ import java.util.Set;
 
 import br.tiagohm.markdownview.css.ExternalStyleSheet;
 import br.tiagohm.markdownview.css.StyleSheet;
+import br.tiagohm.markdownview.ext.button.ButtonExtension;
 import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.label.LabelExtension;
@@ -93,7 +95,8 @@ public class MarkdownView extends FrameLayout
       EmojiExtension.create(),
       VideoLinkExtension.create(),
       TwitterExtension.create(),
-      LabelExtension.create());
+      LabelExtension.create(),
+      ButtonExtension.create());
 
   private final DataHolder OPTIONS = new MutableDataSet()
       .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
@@ -107,6 +110,7 @@ public class MarkdownView extends FrameLayout
   private final HashSet<JavaScript> mScripts = new LinkedHashSet<>();
   private WebView mWebView;
   private boolean mEscapeHtml = true;
+  private OnElementListener mOnElementListener;
 
   public MarkdownView(Context context)
   {
@@ -130,6 +134,7 @@ public class MarkdownView extends FrameLayout
       mWebView.setWebChromeClient(new WebChromeClient());
       mWebView.getSettings().setJavaScriptEnabled(true);
       mWebView.getSettings().setLoadsImagesAutomatically(true);
+      mWebView.addJavascriptInterface(new EventDispatcher(), "android");
     }
     catch(Exception e)
     {
@@ -150,6 +155,11 @@ public class MarkdownView extends FrameLayout
     addView(mWebView);
 
     addJavascript(JQUERY_3);
+  }
+
+  public void setOnElementListener(OnElementListener listener)
+  {
+    mOnElementListener = listener;
   }
 
   public MarkdownView setEscapeHtml(boolean flag)
@@ -299,6 +309,11 @@ public class MarkdownView extends FrameLayout
     new LoadMarkdownUrlTask().execute(url);
   }
 
+  public interface OnElementListener
+  {
+    void onTap(String elem, String id);
+  }
+
   public static class NodeRendererFactoryImpl implements NodeRendererFactory
   {
     @Override
@@ -434,6 +449,18 @@ public class MarkdownView extends FrameLayout
     protected void onPostExecute(String s)
     {
       loadMarkdown(s);
+    }
+  }
+
+  protected class EventDispatcher
+  {
+    @JavascriptInterface
+    public void onTap(String elem, String id)
+    {
+      if(mOnElementListener != null)
+      {
+        mOnElementListener.onTap(elem, id);
+      }
     }
   }
 }

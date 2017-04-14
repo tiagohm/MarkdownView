@@ -48,6 +48,10 @@ public abstract class Bootstrap extends InternalStyleSheet
     addRule("math", "color: inherit");
     addRule("lbl", "display: inline-block", "padding: 0 10px", "background: #1e87f0", "line-height: 1.5",
         "font-size: 12px", "color: #fff", "vertical-align: middle", "white-space: nowrap", "border-radius: 2px", "text-transform: uppercase;");
+    addRule("button", "margin: 0", "overflow: visible", "display: inline-block", "padding: 0 30px",
+        "vertical-align: middle", "font-size: 14px", "line-height: 38px", "text-align: center",
+        "color: #222", "border: 1px solid #e5e5e5", "background-color: transparent");
+
     addRule(".lbl-success", "background-color: #32d296");
     addRule(".lbl-warning", "background-color: #faa05a");
     addRule(".lbl-danger", "background-color: #f0506e");
