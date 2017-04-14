@@ -59,6 +59,7 @@ import br.tiagohm.markdownview.css.ExternalStyleSheet;
 import br.tiagohm.markdownview.css.StyleSheet;
 import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
+import br.tiagohm.markdownview.ext.label.LabelExtension;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
 import br.tiagohm.markdownview.ext.mathjax.MathJax;
 import br.tiagohm.markdownview.ext.mathjax.MathJaxExtension;
@@ -91,7 +92,8 @@ public class MarkdownView extends FrameLayout
       FootnoteExtension.create(),
       EmojiExtension.create(),
       VideoLinkExtension.create(),
-      TwitterExtension.create());
+      TwitterExtension.create(),
+      LabelExtension.create());
 
   private final DataHolder OPTIONS = new MutableDataSet()
       .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")

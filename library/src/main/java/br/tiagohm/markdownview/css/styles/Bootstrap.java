@@ -46,6 +46,11 @@ public abstract class Bootstrap extends InternalStyleSheet
     addRule("sup", "position: relative", "font-size: 75%", "line-height: 0", "vertical-align: baseline", "top: -0.5em");
     addRule("kbd", "padding: 2px 4px", "font-size: 90%", "color: #fff", "background-color: #333", "border-radius: 3px", "box-shadow: inset 0 -1px 0 rgba(0,0,0,0.25)", "font-family: Menlo, Monaco, Consolas, \"Courier New\", monospace");
     addRule("math", "color: inherit");
+    addRule("lbl", "display: inline-block", "padding: 0 10px", "background: #1e87f0", "line-height: 1.5",
+        "font-size: 12px", "color: #fff", "vertical-align: middle", "white-space: nowrap", "border-radius: 2px", "text-transform: uppercase;");
+    addRule(".lbl-success", "background-color: #32d296");
+    addRule(".lbl-warning", "background-color: #faa05a");
+    addRule(".lbl-danger", "background-color: #f0506e");
     //Class
     addRule(".container", "padding-right: 15px", "padding-left: 15px", "margin-right: auto", "margin-left: auto");
     addRule(".task-list-item", "list-style-type: none");
