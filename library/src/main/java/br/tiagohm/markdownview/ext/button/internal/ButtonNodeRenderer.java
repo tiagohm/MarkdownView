@@ -45,7 +45,7 @@ public class ButtonNodeRenderer implements NodeRenderer
     if(!TextUtils.isEmpty(id))
     {
       html.attr("id", id);
-      html.attr("onclick", "javascript:android.onTap('button', '" + id + "');");
+      html.attr("onclick", String.format("javascript:android.onButtonTap('%s');", id));
       html.srcPos(node.getChars()).withAttr().tag("button");
 
       if(node.hasChildren())

@@ -13,8 +13,11 @@ import android.widget.FrameLayout;
 
 import com.orhanobut.logger.Logger;
 import com.vladsch.flexmark.Extension;
+import com.vladsch.flexmark.ast.AutoLink;
 import com.vladsch.flexmark.ast.FencedCodeBlock;
+import com.vladsch.flexmark.ast.Heading;
 import com.vladsch.flexmark.ast.Image;
+import com.vladsch.flexmark.ast.Link;
 import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.ast.util.TextCollectingVisitor;
 import com.vladsch.flexmark.ext.abbreviation.Abbreviation;
@@ -60,8 +63,10 @@ import br.tiagohm.markdownview.css.ExternalStyleSheet;
 import br.tiagohm.markdownview.css.StyleSheet;
 import br.tiagohm.markdownview.ext.button.ButtonExtension;
 import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
+import br.tiagohm.markdownview.ext.kbd.Keystroke;
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.label.LabelExtension;
+import br.tiagohm.markdownview.ext.mark.Mark;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
 import br.tiagohm.markdownview.ext.mathjax.MathJax;
 import br.tiagohm.markdownview.ext.mathjax.MathJaxExtension;
@@ -311,7 +316,19 @@ public class MarkdownView extends FrameLayout
 
   public interface OnElementListener
   {
-    void onTap(String elem, String id);
+    void onButtonTap(String id);
+
+    void onCodeTap(String lang, String code);
+
+    void onHeadingTap(int level, String text);
+
+    void onImageTap(String src, int width, int height);
+
+    void onLinkTap(String href, String text);
+
+    void onKeystrokeTap(String key);
+
+    void onMarkTap(String text);
   }
 
   public static class NodeRendererFactoryImpl implements NodeRendererFactory
@@ -384,14 +401,19 @@ public class MarkdownView extends FrameLayout
     {
       if(node instanceof FencedCodeBlock)
       {
-        String language = ((FencedCodeBlock)node).getInfo().toString();
-        if(!TextUtils.isEmpty(language) &&
-            !language.equals("nohighlight"))
+        if(part.getName().equals("NODE"))
         {
-          addJavascript(HIGHLIGHTJS);
-          addJavascript(HIGHLIGHT_INIT);
+          String language = ((FencedCodeBlock)node).getInfo().toString();
+          if(!TextUtils.isEmpty(language) &&
+              !language.equals("nohighlight"))
+          {
+            addJavascript(HIGHLIGHTJS);
+            addJavascript(HIGHLIGHT_INIT);
 
-          attributes.addValue("language", language);
+            attributes.addValue("language", language);
+            attributes.addValue("onclick", String.format("javascript:android.onCodeTap('%s', this.textContent);",
+                language));
+          }
         }
       }
       else if(node instanceof MathJax)
@@ -405,6 +427,28 @@ public class MarkdownView extends FrameLayout
         addStyleSheet(TOOLTIPSTER_CSS);
         addJavascript(TOOLTIPSTER_INIT);
         attributes.addValue("class", "tooltip");
+      }
+      else if(node instanceof Heading)
+      {
+        attributes.addValue("onclick", String.format("javascript:android.onHeadingTap(%d, '%s');",
+            ((Heading)node).getLevel(), ((Heading)node).getText()));
+      }
+      else if(node instanceof Image)
+      {
+        attributes.addValue("onclick", String.format("javascript: android.onImageTap(this.src, this.clientWidth, this.clientHeight);"));
+      }
+      else if(node instanceof Mark)
+      {
+        attributes.addValue("onclick", String.format("javascript: android.onMarkTap(this.textContent)"));
+      }
+      else if(node instanceof Keystroke)
+      {
+        attributes.addValue("onclick", String.format("javascript: android.onKeystrokeTap(this.textContent)"));
+      }
+      else if(node instanceof Link ||
+          node instanceof AutoLink)
+      {
+        attributes.addValue("onclick", String.format("javascript: android.onLinkTap(this.href, this.textContent)"));
       }
     }
   }
@@ -455,11 +499,65 @@ public class MarkdownView extends FrameLayout
   protected class EventDispatcher
   {
     @JavascriptInterface
-    public void onTap(String elem, String id)
+    public void onButtonTap(String id)
     {
       if(mOnElementListener != null)
       {
-        mOnElementListener.onTap(elem, id);
+        mOnElementListener.onButtonTap(id);
+      }
+    }
+
+    @JavascriptInterface
+    public void onCodeTap(String lang, String code)
+    {
+      if(mOnElementListener != null)
+      {
+        mOnElementListener.onCodeTap(lang, code);
+      }
+    }
+
+    @JavascriptInterface
+    public void onHeadingTap(int level, String text)
+    {
+      if(mOnElementListener != null)
+      {
+        mOnElementListener.onHeadingTap(level, text);
+      }
+    }
+
+    @JavascriptInterface
+    public void onImageTap(String src, int width, int height)
+    {
+      if(mOnElementListener != null)
+      {
+        mOnElementListener.onImageTap(src, width, height);
+      }
+    }
+
+    @JavascriptInterface
+    public void onMarkTap(String text)
+    {
+      if(mOnElementListener != null)
+      {
+        mOnElementListener.onMarkTap(text);
+      }
+    }
+
+    @JavascriptInterface
+    public void onKeystrokeTap(String key)
+    {
+      if(mOnElementListener != null)
+      {
+        mOnElementListener.onKeystrokeTap(key);
+      }
+    }
+
+    @JavascriptInterface
+    public void onLinkTap(String href, String text)
+    {
+      if(mOnElementListener != null)
+      {
+        mOnElementListener.onLinkTap(href, text);
       }
     }
   }
