@@ -30,50 +30,50 @@ import br.tiagohm.markdownview.ext.video.VideoLink;
 
 public class VideoLinkNodePostProcessor extends NodePostProcessor
 {
-    public VideoLinkNodePostProcessor(DataHolder options)
+  public VideoLinkNodePostProcessor(DataHolder options)
+  {
+  }
+
+  @Override
+  public void process(NodeTracker state, Node node)
+  {
+    if(node instanceof Link)
     {
+      Node previous = node.getPrevious();
+
+      if(previous instanceof Text)
+      {
+        final BasedSequence chars = previous.getChars();
+
+        //Se o nó anterior termina com '@' e é seguido pelo Link
+        if(chars.endsWith("@") && chars.isContinuedBy(node.getChars()))
+        {
+          //Remove o caractere '@' do nó anterior.
+          previous.setChars(chars.subSequence(0, chars.length() - 1));
+          VideoLink videoLink = new VideoLink((Link)node);
+          videoLink.takeChildren(node);
+          node.unlink();
+          previous.insertAfter(videoLink);
+          state.nodeRemoved(node);
+          state.nodeAddedWithChildren(videoLink);
+        }
+      }
+    }
+  }
+
+  public static class Factory extends NodePostProcessorFactory
+  {
+    public Factory(DataHolder options)
+    {
+      super(false);
+
+      addNodes(Link.class);
     }
 
     @Override
-    public void process(NodeTracker state, Node node)
+    public NodePostProcessor create(Document document)
     {
-        if(node instanceof Link)
-        {
-            Node previous = node.getPrevious();
-
-            if(previous instanceof Text)
-            {
-                final BasedSequence chars = previous.getChars();
-
-                //Se o nó anterior termina com '@' e é seguido pelo Link
-                if(chars.endsWith("@") && chars.isContinuedBy(node.getChars()))
-                {
-                    //Remove o caractere '@' do nó anterior.
-                    previous.setChars(chars.subSequence(0, chars.length() - 1));
-                    VideoLink videoLink = new VideoLink((Link)node);
-                    videoLink.takeChildren(node);
-                    node.unlink();
-                    previous.insertAfter(videoLink);
-                    state.nodeRemoved(node);
-                    state.nodeAddedWithChildren(videoLink);
-                }
-            }
-        }
+      return new VideoLinkNodePostProcessor(document);
     }
-
-    public static class Factory extends NodePostProcessorFactory
-    {
-        public Factory(DataHolder options)
-        {
-            super(false);
-
-            addNodes(Link.class);
-        }
-
-        @Override
-        public NodePostProcessor create(Document document)
-        {
-            return new VideoLinkNodePostProcessor(document);
-        }
-    }
+  }
 }

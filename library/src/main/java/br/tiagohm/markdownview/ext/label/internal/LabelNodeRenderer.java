@@ -1,4 +1,4 @@
-package br.tiagohm.markdownview.ext.mathjax.internal;
+package br.tiagohm.markdownview.ext.label.internal;
 
 import com.vladsch.flexmark.html.CustomNodeRenderer;
 import com.vladsch.flexmark.html.HtmlWriter;
@@ -11,12 +11,13 @@ import com.vladsch.flexmark.util.options.DataHolder;
 import java.util.HashSet;
 import java.util.Set;
 
-import br.tiagohm.markdownview.ext.mathjax.MathJax;
+import br.tiagohm.markdownview.ext.label.Label;
 
-public class MathJaxNodeRenderer implements NodeRenderer
+
+public class LabelNodeRenderer implements NodeRenderer
 {
 
-  public MathJaxNodeRenderer(DataHolder options)
+  public LabelNodeRenderer(DataHolder options)
   {
   }
 
@@ -24,25 +25,26 @@ public class MathJaxNodeRenderer implements NodeRenderer
   public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers()
   {
     HashSet<NodeRenderingHandler<?>> set = new HashSet<>();
-    set.add(new NodeRenderingHandler<>(MathJax.class, new CustomNodeRenderer<MathJax>()
+    set.add(new NodeRenderingHandler<>(Label.class, new CustomNodeRenderer<Label>()
     {
       @Override
-      public void render(MathJax node, NodeRendererContext context, HtmlWriter html)
+      public void render(Label node, NodeRendererContext context, HtmlWriter html)
       {
-        MathJaxNodeRenderer.this.render(node, context, html);
+        LabelNodeRenderer.this.render(node, context, html);
       }
     }));
 
     return set;
   }
 
-  private void render(MathJax node, NodeRendererContext context, HtmlWriter html)
+  private void render(Label node, NodeRendererContext context, HtmlWriter html)
   {
-    html.withAttr().tag("math");
-    html.append("$");
+    if(node.getType() == 3) html.attr("class", "lbl-success");
+    else if(node.getType() == 4) html.attr("class", "lbl-warning");
+    else if(node.getType() == 5) html.attr("class", "lbl-danger");
+    html.withAttr().tag("lbl");
     context.renderChildren(node);
-    html.append("$");
-    html.tag("/math");
+    html.tag("/lbl");
   }
 
   public static class Factory implements NodeRendererFactory
@@ -50,7 +52,7 @@ public class MathJaxNodeRenderer implements NodeRenderer
     @Override
     public NodeRenderer create(final DataHolder options)
     {
-      return new MathJaxNodeRenderer(options);
+      return new LabelNodeRenderer(options);
     }
   }
 }

@@ -16,39 +16,39 @@ import br.tiagohm.markdownview.ext.kbd.Keystroke;
 public class KeystrokeNodeRenderer implements NodeRenderer
 {
 
-    public KeystrokeNodeRenderer(DataHolder options)
-    {
-    }
+  public KeystrokeNodeRenderer(DataHolder options)
+  {
+  }
 
+  @Override
+  public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers()
+  {
+    HashSet<NodeRenderingHandler<?>> set = new HashSet<>();
+    set.add(new NodeRenderingHandler<>(Keystroke.class, new CustomNodeRenderer<Keystroke>()
+    {
+      @Override
+      public void render(Keystroke node, NodeRendererContext context, HtmlWriter html)
+      {
+        KeystrokeNodeRenderer.this.render(node, context, html);
+      }
+    }));
+
+    return set;
+  }
+
+  private void render(Keystroke node, NodeRendererContext context, HtmlWriter html)
+  {
+    html.withAttr().tag("kbd");
+    context.renderChildren(node);
+    html.tag("/kbd");
+  }
+
+  public static class Factory implements NodeRendererFactory
+  {
     @Override
-    public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers()
+    public NodeRenderer create(final DataHolder options)
     {
-        HashSet<NodeRenderingHandler<?>> set = new HashSet<>();
-        set.add(new NodeRenderingHandler<>(Keystroke.class, new CustomNodeRenderer<Keystroke>()
-        {
-            @Override
-            public void render(Keystroke node, NodeRendererContext context, HtmlWriter html)
-            {
-                KeystrokeNodeRenderer.this.render(node, context, html);
-            }
-        }));
-
-        return set;
+      return new KeystrokeNodeRenderer(options);
     }
-
-    private void render(Keystroke node, NodeRendererContext context, HtmlWriter html)
-    {
-        html.withAttr().tag("kbd");
-        context.renderChildren(node);
-        html.tag("/kbd");
-    }
-
-    public static class Factory implements NodeRendererFactory
-    {
-        @Override
-        public NodeRenderer create(final DataHolder options)
-        {
-            return new KeystrokeNodeRenderer(options);
-        }
-    }
+  }
 }

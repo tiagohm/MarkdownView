@@ -10,80 +10,80 @@ import java.io.InputStream;
 
 public class Utils
 {
-    private Utils()
+  private Utils()
+  {
+  }
+
+  public static String getStringFromInputStream(InputStream is)
+      throws IOException
+  {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    byte[] buffer = new byte[1024];
+    int length;
+    while((length = is.read(buffer)) != -1)
     {
+      baos.write(buffer, 0, length);
     }
+    return baos.toString("UTF-8");
+  }
 
-    public static String getStringFromInputStream(InputStream is)
-            throws IOException
+  public static String getStringFromAssetFile(AssetManager asset, String filename)
+  {
+    InputStream is = null;
+
+    try
     {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int length;
-        while((length = is.read(buffer)) != -1)
-        {
-            baos.write(buffer, 0, length);
-        }
-        return baos.toString("UTF-8");
+      is = asset.open(filename);
+      return getStringFromInputStream(is);
     }
-
-    public static String getStringFromAssetFile(AssetManager asset, String filename)
+    catch(Exception e)
     {
-        InputStream is = null;
-
+      e.printStackTrace();
+      return "";
+    }
+    finally
+    {
+      if(is != null)
+      {
         try
         {
-            is = asset.open(filename);
-            return getStringFromInputStream(is);
+          is.close();
         }
-        catch(Exception e)
+        catch(IOException e)
         {
-            e.printStackTrace();
-            return "";
+          e.printStackTrace();
         }
-        finally
-        {
-            if(is != null)
-            {
-                try
-                {
-                    is.close();
-                }
-                catch(IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
+      }
     }
+  }
 
-    public static String getStringFromFile(File file)
+  public static String getStringFromFile(File file)
+  {
+    InputStream is = null;
+
+    try
     {
-        InputStream is = null;
-
+      is = new FileInputStream(file);
+      return getStringFromInputStream(is);
+    }
+    catch(Exception e)
+    {
+      e.printStackTrace();
+      return "";
+    }
+    finally
+    {
+      if(is != null)
+      {
         try
         {
-            is = new FileInputStream(file);
-            return getStringFromInputStream(is);
+          is.close();
         }
-        catch(Exception e)
+        catch(IOException e)
         {
-            e.printStackTrace();
-            return "";
+          e.printStackTrace();
         }
-        finally
-        {
-            if(is != null)
-            {
-                try
-                {
-                    is.close();
-                }
-                catch(IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
+      }
     }
+  }
 }

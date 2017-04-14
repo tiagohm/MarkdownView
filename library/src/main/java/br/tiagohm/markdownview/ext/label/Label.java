@@ -1,37 +1,44 @@
-package br.tiagohm.markdownview.ext.kbd;
+package br.tiagohm.markdownview.ext.label;
 
 import com.vladsch.flexmark.ast.CustomNode;
 import com.vladsch.flexmark.ast.DelimitedNode;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
 
-public class Keystroke extends CustomNode implements DelimitedNode
+public class Label extends CustomNode implements DelimitedNode
 {
   protected BasedSequence openingMarker = BasedSequence.NULL;
   protected BasedSequence text = BasedSequence.NULL;
   protected BasedSequence closingMarker = BasedSequence.NULL;
   protected String superscriptBlockText;
+  protected int type = 0;
 
-  public Keystroke()
+  public Label()
   {
   }
 
-  public Keystroke(BasedSequence chars)
+  public Label(BasedSequence chars)
   {
     super(chars);
   }
 
-  public Keystroke(BasedSequence openingMarker, BasedSequence text, BasedSequence closingMarker)
+  public Label(int type, BasedSequence openingMarker, BasedSequence text, BasedSequence closingMarker)
   {
     super(openingMarker.baseSubSequence(openingMarker.getStartOffset(), closingMarker.getEndOffset()));
+    this.type = type;
     this.openingMarker = openingMarker;
     this.text = text;
     this.closingMarker = closingMarker;
   }
 
-  public Keystroke(BasedSequence chars, String superscriptBlockText)
+  public Label(BasedSequence chars, String superscriptBlockText)
   {
     super(chars);
     this.superscriptBlockText = superscriptBlockText;
+  }
+
+  public int getType()
+  {
+    return type;
   }
 
   @Override

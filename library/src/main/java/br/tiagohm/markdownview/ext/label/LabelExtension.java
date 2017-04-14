@@ -1,22 +1,22 @@
-package br.tiagohm.markdownview.ext.kbd;
+package br.tiagohm.markdownview.ext.label;
 
 import com.vladsch.flexmark.Extension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.options.MutableDataHolder;
 
-import br.tiagohm.markdownview.ext.kbd.internal.KeystrokeDelimiterProcessor;
-import br.tiagohm.markdownview.ext.kbd.internal.KeystrokeNodeRenderer;
+import br.tiagohm.markdownview.ext.label.internal.LabelDelimiterProcessor;
+import br.tiagohm.markdownview.ext.label.internal.LabelNodeRenderer;
 
-public class KeystrokeExtension implements Parser.ParserExtension, HtmlRenderer.HtmlRendererExtension
+public class LabelExtension implements Parser.ParserExtension, HtmlRenderer.HtmlRendererExtension
 {
-  private KeystrokeExtension()
+  private LabelExtension()
   {
   }
 
   public static Extension create()
   {
-    return new KeystrokeExtension();
+    return new LabelExtension();
   }
 
   @Override
@@ -34,7 +34,7 @@ public class KeystrokeExtension implements Parser.ParserExtension, HtmlRenderer.
   @Override
   public void extend(Parser.Builder parserBuilder)
   {
-    parserBuilder.customDelimiterProcessor(new KeystrokeDelimiterProcessor());
+    parserBuilder.customDelimiterProcessor(new LabelDelimiterProcessor());
   }
 
   @Override
@@ -43,7 +43,7 @@ public class KeystrokeExtension implements Parser.ParserExtension, HtmlRenderer.
     switch(rendererType)
     {
       case "HTML":
-        rendererBuilder.nodeRendererFactory(new KeystrokeNodeRenderer.Factory());
+        rendererBuilder.nodeRendererFactory(new LabelNodeRenderer.Factory());
         break;
     }
   }
