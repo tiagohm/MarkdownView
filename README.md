@@ -91,6 +91,11 @@ From *https://twitter.com/RealGrumpyCat/status/845101936550469634*
 From *https://twitter.com/tiag0hm*
 * `#[follow](tiag0hm)`
 
+## Tap Events
+```java
+mMarkdownView.setOnElementListener(new MarkdownView.OnElementListener(){ /*...*/ });
+```
+
 ## Themes
 * GitHub
 
@@ -125,6 +130,8 @@ From *https://twitter.com/tiag0hm*
 - [x] Twitter
 - [x] JavaScripts
 - [x] Label `--DEFAULT--` `---SUCCESS---` `----WARNING----` `-----DANGER-----`
+- [x] Button `B[text](id)`
+- [x] Click/Tap Events
 
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/1.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/2.png'/>
