@@ -74,6 +74,12 @@ mMarkdownView.addStyleSheet(ExternalStyleSheet.fromAsset("github.css", null);
 mMarkdownView.addStyleSheet(ExternalStyleSheet.fromAsset("github2.css", "screen and (min-width: 1281px)");
 ```
 
+## JavaScript
+```java
+JavaScript js = new ExternalJavaScript(url, async, defer);
+mMarkdownView.addJavascript(js);
+```
+
 ## Twitter
 
 #### Embed a Single Tweet
@@ -117,6 +123,8 @@ From *https://twitter.com/tiag0hm*
 - [x] Custom CSS
 - [x] Youtube `@[youtube](fM-J08X6l_Q)`
 - [x] Twitter
+- [x] JavaScripts
+- [x] Label `--DEFAULT--` `---SUCCESS---` `----WARNING----` `-----DANGER-----`
 
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/1.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/2.png'/>
