@@ -6,14 +6,18 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 
 import com.orhanobut.logger.Logger;
 import com.vladsch.flexmark.Extension;
+import com.vladsch.flexmark.ast.AutoLink;
 import com.vladsch.flexmark.ast.FencedCodeBlock;
+import com.vladsch.flexmark.ast.Heading;
 import com.vladsch.flexmark.ast.Image;
+import com.vladsch.flexmark.ast.Link;
 import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.ast.util.TextCollectingVisitor;
 import com.vladsch.flexmark.ext.abbreviation.Abbreviation;
@@ -57,9 +61,12 @@ import java.util.Set;
 
 import br.tiagohm.markdownview.css.ExternalStyleSheet;
 import br.tiagohm.markdownview.css.StyleSheet;
+import br.tiagohm.markdownview.ext.button.ButtonExtension;
 import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
+import br.tiagohm.markdownview.ext.kbd.Keystroke;
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.label.LabelExtension;
+import br.tiagohm.markdownview.ext.mark.Mark;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
 import br.tiagohm.markdownview.ext.mathjax.MathJax;
 import br.tiagohm.markdownview.ext.mathjax.MathJaxExtension;
@@ -93,7 +100,8 @@ public class MarkdownView extends FrameLayout
       EmojiExtension.create(),
       VideoLinkExtension.create(),
       TwitterExtension.create(),
-      LabelExtension.create());
+      LabelExtension.create(),
+      ButtonExtension.create());
 
   private final DataHolder OPTIONS = new MutableDataSet()
       .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
@@ -107,6 +115,7 @@ public class MarkdownView extends FrameLayout
   private final HashSet<JavaScript> mScripts = new LinkedHashSet<>();
   private WebView mWebView;
   private boolean mEscapeHtml = true;
+  private OnElementListener mOnElementListener;
 
   public MarkdownView(Context context)
   {
@@ -130,6 +139,7 @@ public class MarkdownView extends FrameLayout
       mWebView.setWebChromeClient(new WebChromeClient());
       mWebView.getSettings().setJavaScriptEnabled(true);
       mWebView.getSettings().setLoadsImagesAutomatically(true);
+      mWebView.addJavascriptInterface(new EventDispatcher(), "android");
     }
     catch(Exception e)
     {
@@ -150,6 +160,11 @@ public class MarkdownView extends FrameLayout
     addView(mWebView);
 
     addJavascript(JQUERY_3);
+  }
+
+  public void setOnElementListener(OnElementListener listener)
+  {
+    mOnElementListener = listener;
   }
 
   public MarkdownView setEscapeHtml(boolean flag)
@@ -299,6 +314,23 @@ public class MarkdownView extends FrameLayout
     new LoadMarkdownUrlTask().execute(url);
   }
 
+  public interface OnElementListener
+  {
+    void onButtonTap(String id);
+
+    void onCodeTap(String lang, String code);
+
+    void onHeadingTap(int level, String text);
+
+    void onImageTap(String src, int width, int height);
+
+    void onLinkTap(String href, String text);
+
+    void onKeystrokeTap(String key);
+
+    void onMarkTap(String text);
+  }
+
   public static class NodeRendererFactoryImpl implements NodeRendererFactory
   {
     @Override
@@ -369,14 +401,19 @@ public class MarkdownView extends FrameLayout
     {
       if(node instanceof FencedCodeBlock)
       {
-        String language = ((FencedCodeBlock)node).getInfo().toString();
-        if(!TextUtils.isEmpty(language) &&
-            !language.equals("nohighlight"))
+        if(part.getName().equals("NODE"))
         {
-          addJavascript(HIGHLIGHTJS);
-          addJavascript(HIGHLIGHT_INIT);
+          String language = ((FencedCodeBlock)node).getInfo().toString();
+          if(!TextUtils.isEmpty(language) &&
+              !language.equals("nohighlight"))
+          {
+            addJavascript(HIGHLIGHTJS);
+            addJavascript(HIGHLIGHT_INIT);
 
-          attributes.addValue("language", language);
+            attributes.addValue("language", language);
+            attributes.addValue("onclick", String.format("javascript:android.onCodeTap('%s', this.textContent);",
+                language));
+          }
         }
       }
       else if(node instanceof MathJax)
@@ -390,6 +427,28 @@ public class MarkdownView extends FrameLayout
         addStyleSheet(TOOLTIPSTER_CSS);
         addJavascript(TOOLTIPSTER_INIT);
         attributes.addValue("class", "tooltip");
+      }
+      else if(node instanceof Heading)
+      {
+        attributes.addValue("onclick", String.format("javascript:android.onHeadingTap(%d, '%s');",
+            ((Heading)node).getLevel(), ((Heading)node).getText()));
+      }
+      else if(node instanceof Image)
+      {
+        attributes.addValue("onclick", String.format("javascript: android.onImageTap(this.src, this.clientWidth, this.clientHeight);"));
+      }
+      else if(node instanceof Mark)
+      {
+        attributes.addValue("onclick", String.format("javascript: android.onMarkTap(this.textContent)"));
+      }
+      else if(node instanceof Keystroke)
+      {
+        attributes.addValue("onclick", String.format("javascript: android.onKeystrokeTap(this.textContent)"));
+      }
+      else if(node instanceof Link ||
+          node instanceof AutoLink)
+      {
+        attributes.addValue("onclick", String.format("javascript: android.onLinkTap(this.href, this.textContent)"));
       }
     }
   }
@@ -434,6 +493,72 @@ public class MarkdownView extends FrameLayout
     protected void onPostExecute(String s)
     {
       loadMarkdown(s);
+    }
+  }
+
+  protected class EventDispatcher
+  {
+    @JavascriptInterface
+    public void onButtonTap(String id)
+    {
+      if(mOnElementListener != null)
+      {
+        mOnElementListener.onButtonTap(id);
+      }
+    }
+
+    @JavascriptInterface
+    public void onCodeTap(String lang, String code)
+    {
+      if(mOnElementListener != null)
+      {
+        mOnElementListener.onCodeTap(lang, code);
+      }
+    }
+
+    @JavascriptInterface
+    public void onHeadingTap(int level, String text)
+    {
+      if(mOnElementListener != null)
+      {
+        mOnElementListener.onHeadingTap(level, text);
+      }
+    }
+
+    @JavascriptInterface
+    public void onImageTap(String src, int width, int height)
+    {
+      if(mOnElementListener != null)
+      {
+        mOnElementListener.onImageTap(src, width, height);
+      }
+    }
+
+    @JavascriptInterface
+    public void onMarkTap(String text)
+    {
+      if(mOnElementListener != null)
+      {
+        mOnElementListener.onMarkTap(text);
+      }
+    }
+
+    @JavascriptInterface
+    public void onKeystrokeTap(String key)
+    {
+      if(mOnElementListener != null)
+      {
+        mOnElementListener.onKeystrokeTap(key);
+      }
+    }
+
+    @JavascriptInterface
+    public void onLinkTap(String href, String text)
+    {
+      if(mOnElementListener != null)
+      {
+        mOnElementListener.onLinkTap(href, text);
+      }
     }
   }
 }

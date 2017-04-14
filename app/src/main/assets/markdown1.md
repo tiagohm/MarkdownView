@@ -188,3 +188,7 @@ Seguir: #[follow](tiag0hm)
 # Label
 
 --DEFAULT-- ---SUCCESS--- ----WARNING---- -----DANGER-----
+
+# Button
+
+B[**Click** *Me!*](click-me-btn)
