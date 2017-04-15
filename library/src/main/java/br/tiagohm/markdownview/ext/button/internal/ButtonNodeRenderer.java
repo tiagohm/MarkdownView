@@ -2,7 +2,6 @@ package br.tiagohm.markdownview.ext.button.internal;
 
 import android.text.TextUtils;
 
-import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.html.CustomNodeRenderer;
 import com.vladsch.flexmark.html.HtmlWriter;
 import com.vladsch.flexmark.html.renderer.NodeRenderer;
@@ -47,19 +46,7 @@ public class ButtonNodeRenderer implements NodeRenderer
       html.attr("id", id);
       html.attr("onclick", String.format("javascript:android.onButtonTap('%s');", id));
       html.srcPos(node.getChars()).withAttr().tag("button");
-
-      if(node.hasChildren())
-      {
-        for(Node child : node.getChildren())
-        {
-          context.render(child);
-        }
-      }
-      else
-      {
-        html.append(node.getText().toString().trim());
-      }
-
+      context.renderChildren(node);
       html.tag("/button");
     }
     else

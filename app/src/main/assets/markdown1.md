@@ -1,4 +1,4 @@
-# Markdown
+# {{app_name}}
 
 ---
 
@@ -192,3 +192,7 @@ Seguir: #[follow](tiag0hm)
 # Button
 
 B[**Click** *Me!*](click-me-btn)
+
+# Localization
+
+B[{{hello}}](hello-btn)
