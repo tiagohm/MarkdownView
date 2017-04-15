@@ -39,7 +39,7 @@ public class KeystrokeNodeRenderer implements NodeRenderer
   private void render(Keystroke node, NodeRendererContext context, HtmlWriter html)
   {
     html.withAttr().tag("kbd");
-    context.renderChildren(node);
+    html.append(node.getText().trim());
     html.tag("/kbd");
   }
 
