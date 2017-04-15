@@ -146,6 +146,7 @@ See more [here](https://developer.android.com/guide/topics/resources/localizatio
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/6.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/7.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/8.png'/>
+<img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/9.png'/>
 
 ## LICENSE
 ```
