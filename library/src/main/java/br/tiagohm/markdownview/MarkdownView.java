@@ -66,6 +66,7 @@ import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
 import br.tiagohm.markdownview.ext.kbd.Keystroke;
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.label.LabelExtension;
+import br.tiagohm.markdownview.ext.localization.LocalizationExtension;
 import br.tiagohm.markdownview.ext.mark.Mark;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
 import br.tiagohm.markdownview.ext.mathjax.MathJax;
@@ -101,7 +102,8 @@ public class MarkdownView extends FrameLayout
       VideoLinkExtension.create(),
       TwitterExtension.create(),
       LabelExtension.create(),
-      ButtonExtension.create());
+      ButtonExtension.create(),
+      LocalizationExtension.create());
 
   private final DataHolder OPTIONS = new MutableDataSet()
       .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
@@ -134,6 +136,9 @@ public class MarkdownView extends FrameLayout
     mWebView = new WebView(context, null, 0);
     mWebView.setLayoutParams(new FrameLayout.LayoutParams(
         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+    ((MutableDataHolder)OPTIONS).set(LocalizationExtension.LOCALIZATION_CONTEXT, context);
+
     try
     {
       mWebView.setWebChromeClient(new WebChromeClient());
