@@ -96,6 +96,10 @@ From *https://twitter.com/tiag0hm*
 mMarkdownView.setOnElementListener(new MarkdownView.OnElementListener(){ /*...*/ });
 ```
 
+## Localization
+
+See more [here](https://developer.android.com/guide/topics/resources/localization.html#managing-strings)
+
 ## Themes
 * GitHub
 
@@ -132,6 +136,7 @@ mMarkdownView.setOnElementListener(new MarkdownView.OnElementListener(){ /*...*/
 - [x] Label `--DEFAULT--` `---SUCCESS---` `----WARNING----` `-----DANGER-----`
 - [x] Button `B[text](id)`
 - [x] Click/Tap Events
+- [x] Localization `{{resource_name}}`
 
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/1.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/2.png'/>
