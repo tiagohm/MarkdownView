@@ -319,6 +319,13 @@ public class MarkdownView extends FrameLayout
     new LoadMarkdownUrlTask().execute(url);
   }
 
+    /**
+     * Returns the internal @WebView that holds the markdown text
+     */
+    public WebView getWebView() {
+        return mWebView;
+    }
+
   public interface OnElementListener
   {
     void onButtonTap(String id);
