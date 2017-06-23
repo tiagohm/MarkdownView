@@ -20,8 +20,8 @@ public abstract class Bootstrap extends InternalStyleSheet
     addRule("strong", "font-weight: 700");
     addRule("em", "font-style: italic");
     addRule("a", "color: #337ab7", "text-decoration: none", "word-wrap: break-word");
-    addRule("img", "vertical-align: middle", "border: 0");
-    addRule("code", "padding: 2px 4px", "font-size: 90%", "color: #c7254e", "background-color: #f9f2f4", "white-space: nowrap", "border-radius: 4px", "font-family: Menlo,Monaco,Consolas,\"Courier New\",monospace");
+    addRule("img", "vertical-align: middle", "border: 0", "max-width: 100%");
+    addRule("code", "padding: 2px 4px", "font-size: 90%", "color: #c7254e", "background-color: #f9f2f4", "white-space: pre-wrap", "border-radius: 4px", "font-family: Menlo,Monaco,Consolas,\"Courier New\",monospace");
     addRule("pre code", "padding: 0", "white-wrap: pre-wrap", "white-space: pre", "background-color: transparent", "border-radius: 0");
     addRule("pre", "display: block", "padding: 9.5px", "margin: 0 0 10px", "font-size: 13px", "line-height: 1.42857143", "color: #333", "background-color: #f5f5f5", "border: 1px solid #ccc", "border-radius: 4px", "font-family: Menlo,Monaco,Consolas,\"Courier New\",monospace", "overflow: auto");
     addRule("blockquote", "padding: 0px 20px", "margin: 0 0 20px", "font-size: 14px", "border-left: 5px solid #eee");
