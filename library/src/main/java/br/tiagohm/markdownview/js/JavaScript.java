@@ -1,6 +1,5 @@
 package br.tiagohm.markdownview.js;
 
-public interface JavaScript
-{
-  String toHTML();
+public interface JavaScript {
+    String toHTML();
 }

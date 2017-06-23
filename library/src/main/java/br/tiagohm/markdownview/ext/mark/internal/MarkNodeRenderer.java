@@ -13,42 +13,34 @@ import java.util.Set;
 
 import br.tiagohm.markdownview.ext.mark.Mark;
 
-public class MarkNodeRenderer implements NodeRenderer
-{
+public class MarkNodeRenderer implements NodeRenderer {
 
-  public MarkNodeRenderer(DataHolder options)
-  {
-  }
-
-  @Override
-  public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers()
-  {
-    HashSet<NodeRenderingHandler<?>> set = new HashSet<>();
-    set.add(new NodeRenderingHandler<>(Mark.class, new CustomNodeRenderer<Mark>()
-    {
-      @Override
-      public void render(Mark node, NodeRendererContext context, HtmlWriter html)
-      {
-        MarkNodeRenderer.this.render(node, context, html);
-      }
-    }));
-
-    return set;
-  }
-
-  private void render(Mark node, NodeRendererContext context, HtmlWriter html)
-  {
-    html.srcPos(node.getText()).withAttr().tag("mark");
-    context.renderChildren(node);
-    html.tag("/mark");
-  }
-
-  public static class Factory implements NodeRendererFactory
-  {
-    @Override
-    public NodeRenderer create(final DataHolder options)
-    {
-      return new MarkNodeRenderer(options);
+    public MarkNodeRenderer(DataHolder options) {
     }
-  }
+
+    @Override
+    public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
+        HashSet<NodeRenderingHandler<?>> set = new HashSet<>();
+        set.add(new NodeRenderingHandler<>(Mark.class, new CustomNodeRenderer<Mark>() {
+            @Override
+            public void render(Mark node, NodeRendererContext context, HtmlWriter html) {
+                MarkNodeRenderer.this.render(node, context, html);
+            }
+        }));
+
+        return set;
+    }
+
+    private void render(Mark node, NodeRendererContext context, HtmlWriter html) {
+        html.srcPos(node.getText()).withAttr().tag("mark");
+        context.renderChildren(node);
+        html.tag("/mark");
+    }
+
+    public static class Factory implements NodeRendererFactory {
+        @Override
+        public NodeRenderer create(final DataHolder options) {
+            return new MarkNodeRenderer(options);
+        }
+    }
 }

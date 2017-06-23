@@ -28,52 +28,43 @@ import com.vladsch.flexmark.util.sequence.BasedSequence;
 
 import br.tiagohm.markdownview.ext.button.Button;
 
-public class ButtonNodePostProcessor extends NodePostProcessor
-{
-  public ButtonNodePostProcessor(DataHolder options)
-  {
-  }
-
-  @Override
-  public void process(NodeTracker state, Node node)
-  {
-    if(node instanceof Link)
-    {
-      Node previous = node.getPrevious();
-
-      if(previous instanceof Text)
-      {
-        final BasedSequence chars = previous.getChars();
-
-        //Se o nó anterior termina com 'B' e é seguido pelo Link
-        if(chars.endsWith("B") && chars.isContinuedBy(node.getChars()))
-        {
-          //Remove o caractere 'B' do nó anterior.
-          previous.setChars(chars.subSequence(0, chars.length() - 1));
-          Button btn = new Button((Link)node);
-          btn.takeChildren(node);
-          node.unlink();
-          previous.insertAfter(btn);
-          state.nodeRemoved(node);
-          state.nodeAddedWithChildren(btn);
-        }
-      }
-    }
-  }
-
-  public static class Factory extends NodePostProcessorFactory
-  {
-    public Factory(DataHolder options)
-    {
-      super(false);
-
-      addNodes(Link.class);
+public class ButtonNodePostProcessor extends NodePostProcessor {
+    public ButtonNodePostProcessor(DataHolder options) {
     }
 
     @Override
-    public NodePostProcessor create(Document document)
-    {
-      return new ButtonNodePostProcessor(document);
+    public void process(NodeTracker state, Node node) {
+        if (node instanceof Link) {
+            Node previous = node.getPrevious();
+
+            if (previous instanceof Text) {
+                final BasedSequence chars = previous.getChars();
+
+                //Se o nó anterior termina com 'B' e é seguido pelo Link
+                if (chars.endsWith("B") && chars.isContinuedBy(node.getChars())) {
+                    //Remove o caractere 'B' do nó anterior.
+                    previous.setChars(chars.subSequence(0, chars.length() - 1));
+                    Button btn = new Button((Link) node);
+                    btn.takeChildren(node);
+                    node.unlink();
+                    previous.insertAfter(btn);
+                    state.nodeRemoved(node);
+                    state.nodeAddedWithChildren(btn);
+                }
+            }
+        }
     }
-  }
+
+    public static class Factory extends NodePostProcessorFactory {
+        public Factory(DataHolder options) {
+            super(false);
+
+            addNodes(Link.class);
+        }
+
+        @Override
+        public NodePostProcessor create(Document document) {
+            return new ButtonNodePostProcessor(document);
+        }
+    }
 }
