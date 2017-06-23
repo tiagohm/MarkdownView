@@ -76,7 +76,7 @@ import br.tiagohm.markdownview.ext.video.VideoLinkExtension;
 import br.tiagohm.markdownview.js.ExternalScript;
 import br.tiagohm.markdownview.js.JavaScript;
 
-public class MarkdownView extends FrameLayout
+public class MarkdownView extends WebView
 {
   public final static JavaScript JQUERY_3 = new ExternalScript("file:///android_asset/js/jquery-3.1.1.min.js", false, false);
   public final static JavaScript HIGHLIGHTJS = new ExternalScript("file:///android_asset/js/highlight.js", false, true);
@@ -115,7 +115,6 @@ public class MarkdownView extends FrameLayout
 
   private final List<StyleSheet> mStyleSheets = new LinkedList<>();
   private final HashSet<JavaScript> mScripts = new LinkedHashSet<>();
-  private WebView mWebView;
   private boolean mEscapeHtml = true;
   private OnElementListener mOnElementListener;
 
@@ -133,18 +132,14 @@ public class MarkdownView extends FrameLayout
   {
     super(context, attrs, defStyleAttr);
 
-    mWebView = new WebView(context, null, 0);
-    mWebView.setLayoutParams(new FrameLayout.LayoutParams(
-        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
     ((MutableDataHolder)OPTIONS).set(LocalizationExtension.LOCALIZATION_CONTEXT, context);
 
     try
     {
-      mWebView.setWebChromeClient(new WebChromeClient());
-      mWebView.getSettings().setJavaScriptEnabled(true);
-      mWebView.getSettings().setLoadsImagesAutomatically(true);
-      mWebView.addJavascriptInterface(new EventDispatcher(), "android");
+      setWebChromeClient(new WebChromeClient());
+      getSettings().setJavaScriptEnabled(true);
+      getSettings().setLoadsImagesAutomatically(true);
+      addJavascriptInterface(new EventDispatcher(), "android");
     }
     catch(Exception e)
     {
@@ -161,8 +156,6 @@ public class MarkdownView extends FrameLayout
     {
       e.printStackTrace();
     }
-
-    addView(mWebView);
 
     addJavascript(JQUERY_3);
   }
@@ -297,7 +290,7 @@ public class MarkdownView extends FrameLayout
 
     Logger.d(html);
 
-    mWebView.loadDataWithBaseURL("",
+    loadDataWithBaseURL("",
         html,
         "text/html",
         "UTF-8",
