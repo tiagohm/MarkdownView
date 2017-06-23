@@ -5,7 +5,7 @@ group = 'com.github.tiagohm'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
         minSdkVersion 16
@@ -31,13 +31,13 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
-    compile 'com.vladsch.flexmark:flexmark:0.19.0'
-    compile 'com.vladsch.flexmark:flexmark-ext-tables:0.19.0'
-    compile 'com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.19.0'
-    compile 'com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.19.0'
-    compile 'com.vladsch.flexmark:flexmark-ext-autolink:0.19.0'
-    compile 'com.vladsch.flexmark:flexmark-ext-abbreviation:0.19.0'
-    compile 'com.vladsch.flexmark:flexmark-ext-superscript:0.19.0'
-    compile 'com.vladsch.flexmark:flexmark-ext-footnotes:0.19.0'
+    compile 'com.vladsch.flexmark:flexmark:0.20.0'
+    compile 'com.vladsch.flexmark:flexmark-ext-tables:0.20.0'
+    compile 'com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.20.0'
+    compile 'com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.20.0'
+    compile 'com.vladsch.flexmark:flexmark-ext-autolink:0.20.0'
+    compile 'com.vladsch.flexmark:flexmark-ext-abbreviation:0.20.0'
+    compile 'com.vladsch.flexmark:flexmark-ext-superscript:0.20.0'
+    compile 'com.vladsch.flexmark:flexmark-ext-footnotes:0.20.0'
     compile 'com.orhanobut:logger:1.15'
 }

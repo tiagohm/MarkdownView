@@ -13,42 +13,34 @@ import java.util.Set;
 
 import br.tiagohm.markdownview.ext.kbd.Keystroke;
 
-public class KeystrokeNodeRenderer implements NodeRenderer
-{
+public class KeystrokeNodeRenderer implements NodeRenderer {
 
-  public KeystrokeNodeRenderer(DataHolder options)
-  {
-  }
-
-  @Override
-  public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers()
-  {
-    HashSet<NodeRenderingHandler<?>> set = new HashSet<>();
-    set.add(new NodeRenderingHandler<>(Keystroke.class, new CustomNodeRenderer<Keystroke>()
-    {
-      @Override
-      public void render(Keystroke node, NodeRendererContext context, HtmlWriter html)
-      {
-        KeystrokeNodeRenderer.this.render(node, context, html);
-      }
-    }));
-
-    return set;
-  }
-
-  private void render(Keystroke node, NodeRendererContext context, HtmlWriter html)
-  {
-    html.withAttr().tag("kbd");
-    html.append(node.getText().trim());
-    html.tag("/kbd");
-  }
-
-  public static class Factory implements NodeRendererFactory
-  {
-    @Override
-    public NodeRenderer create(final DataHolder options)
-    {
-      return new KeystrokeNodeRenderer(options);
+    public KeystrokeNodeRenderer(DataHolder options) {
     }
-  }
+
+    @Override
+    public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
+        HashSet<NodeRenderingHandler<?>> set = new HashSet<>();
+        set.add(new NodeRenderingHandler<>(Keystroke.class, new CustomNodeRenderer<Keystroke>() {
+            @Override
+            public void render(Keystroke node, NodeRendererContext context, HtmlWriter html) {
+                KeystrokeNodeRenderer.this.render(node, context, html);
+            }
+        }));
+
+        return set;
+    }
+
+    private void render(Keystroke node, NodeRendererContext context, HtmlWriter html) {
+        html.withAttr().tag("kbd");
+        html.append(node.getText().trim());
+        html.tag("/kbd");
+    }
+
+    public static class Factory implements NodeRendererFactory {
+        @Override
+        public NodeRenderer create(final DataHolder options) {
+            return new KeystrokeNodeRenderer(options);
+        }
+    }
 }
