@@ -1,6 +1,4 @@
-package br.tiagohm.markdownview.ext.localization;
-
-import android.content.Context;
+package br.tiagohm.markdownview.ext.bean;
 
 import com.vladsch.flexmark.Extension;
 import com.vladsch.flexmark.html.HtmlRenderer;
@@ -8,17 +6,18 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.options.DataKey;
 import com.vladsch.flexmark.util.options.MutableDataHolder;
 
-import br.tiagohm.markdownview.ext.localization.internal.LocalizationDelimiterProcessor;
-import br.tiagohm.markdownview.ext.localization.internal.LocalizationNodeRenderer;
+import br.tiagohm.markdownview.MarkdownView;
+import br.tiagohm.markdownview.ext.bean.internal.BeanDelimiterProcessor;
+import br.tiagohm.markdownview.ext.bean.internal.BeanNodeRenderer;
 
-public class LocalizationExtension implements Parser.ParserExtension, HtmlRenderer.HtmlRendererExtension {
-    public static final DataKey<Context> LOCALIZATION_CONTEXT = new DataKey<>("LOCALIZATION_CONTEXT", (Context) null);
+public class BeanExtension implements Parser.ParserExtension, HtmlRenderer.HtmlRendererExtension {
+    public static final DataKey<MarkdownView> BEAN_VIEW = new DataKey<>("BEAN_VIEW", (MarkdownView) null);
 
-    private LocalizationExtension() {
+    private BeanExtension() {
     }
 
     public static Extension create() {
-        return new LocalizationExtension();
+        return new BeanExtension();
     }
 
     @Override
@@ -33,14 +32,14 @@ public class LocalizationExtension implements Parser.ParserExtension, HtmlRender
 
     @Override
     public void extend(Parser.Builder parserBuilder) {
-        parserBuilder.customDelimiterProcessor(new LocalizationDelimiterProcessor());
+        parserBuilder.customDelimiterProcessor(new BeanDelimiterProcessor());
     }
 
     @Override
     public void extend(HtmlRenderer.Builder rendererBuilder, String rendererType) {
         switch (rendererType) {
             case "HTML":
-                rendererBuilder.nodeRendererFactory(new LocalizationNodeRenderer.Factory());
+                rendererBuilder.nodeRendererFactory(new BeanNodeRenderer.Factory());
                 break;
         }
     }

@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
@@ -59,12 +58,11 @@ import java.util.Set;
 
 import br.tiagohm.markdownview.css.ExternalStyleSheet;
 import br.tiagohm.markdownview.css.StyleSheet;
-import br.tiagohm.markdownview.ext.button.ButtonExtension;
 import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
 import br.tiagohm.markdownview.ext.kbd.Keystroke;
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.label.LabelExtension;
-import br.tiagohm.markdownview.ext.localization.LocalizationExtension;
+import br.tiagohm.markdownview.ext.bean.BeanExtension;
 import br.tiagohm.markdownview.ext.mark.Mark;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
 import br.tiagohm.markdownview.ext.mathjax.MathJax;
@@ -75,16 +73,15 @@ import br.tiagohm.markdownview.js.ExternalScript;
 import br.tiagohm.markdownview.js.JavaScript;
 
 public class MarkdownView extends WebView {
+
     public final static JavaScript JQUERY_3 = new ExternalScript("file:///android_asset/js/jquery-3.1.1.min.js", false, false);
     public final static JavaScript HIGHLIGHTJS = new ExternalScript("file:///android_asset/js/highlight.js", false, true);
-    public final static JavaScript MATHJAX = new ExternalScript("https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML", false, true);
+    public final static JavaScript MATHJAX = new ExternalScript("https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML", true, false);
+    public final static JavaScript MATHJAX_CONFIG = new ExternalScript("file:///android_asset/js/mathjax-config.js", false, false, "text/x-mathjax-config");
     public final static JavaScript HIGHLIGHT_INIT = new ExternalScript("file:///android_asset/js/highlight-init.js", false, true);
-    public final static JavaScript MATHJAX_CONFIG = new ExternalScript("file:///android_asset/js/mathjax-config.js", false, true);
     public final static JavaScript TOOLTIPSTER_JS = new ExternalScript("file:///android_asset/js/tooltipster.bundle.min.js", false, true);
     public final static JavaScript TOOLTIPSTER_INIT = new ExternalScript("file:///android_asset/js/tooltipster-init.js", false, true);
-
     public final static StyleSheet TOOLTIPSTER_CSS = new ExternalStyleSheet("file:///android_asset/css/tooltipster.bundle.min.css");
-
     private final static List<Extension> EXTENSIONS = Arrays.asList(TablesExtension.create(),
             TaskListExtension.create(),
             AbbreviationExtension.create(),
@@ -99,9 +96,7 @@ public class MarkdownView extends WebView {
             VideoLinkExtension.create(),
             TwitterExtension.create(),
             LabelExtension.create(),
-            ButtonExtension.create(),
-            LocalizationExtension.create());
-
+            BeanExtension.create());
     private final DataHolder OPTIONS = new MutableDataSet()
             .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
             .set(FootnoteExtension.FOOTNOTE_REF_SUFFIX, "]")
@@ -109,11 +104,10 @@ public class MarkdownView extends WebView {
             .set(HtmlRenderer.FENCED_CODE_NO_LANGUAGE_CLASS, "nohighlight")
             //.set(FootnoteExtension.FOOTNOTE_BACK_REF_STRING, "&#8593")
             ;
-
     private final List<StyleSheet> mStyleSheets = new LinkedList<>();
     private final HashSet<JavaScript> mScripts = new LinkedHashSet<>();
     private boolean mEscapeHtml = true;
-    private OnElementListener mOnElementListener;
+    private Object bean;
 
     public MarkdownView(Context context) {
         this(context, null);
@@ -126,13 +120,12 @@ public class MarkdownView extends WebView {
     public MarkdownView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        ((MutableDataHolder) OPTIONS).set(LocalizationExtension.LOCALIZATION_CONTEXT, context);
+        ((MutableDataHolder) OPTIONS).set(BeanExtension.BEAN_VIEW, this);
 
         try {
             setWebChromeClient(new WebChromeClient());
             getSettings().setJavaScriptEnabled(true);
             getSettings().setLoadsImagesAutomatically(true);
-            addJavascriptInterface(new EventDispatcher(), "android");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -148,8 +141,12 @@ public class MarkdownView extends WebView {
         addJavascript(JQUERY_3);
     }
 
-    public void setOnElementListener(OnElementListener listener) {
-        mOnElementListener = listener;
+    public void setBean(Object bean) {
+        this.bean = bean;
+    }
+
+    public Object getBean() {
+        return bean;
     }
 
     public MarkdownView setEscapeHtml(boolean flag) {
@@ -273,22 +270,6 @@ public class MarkdownView extends WebView {
         new LoadMarkdownUrlTask().execute(url);
     }
 
-    public interface OnElementListener {
-        void onButtonTap(String id);
-
-        void onCodeTap(String lang, String code);
-
-        void onHeadingTap(int level, String text);
-
-        void onImageTap(String src, int width, int height);
-
-        void onLinkTap(String href, String text);
-
-        void onKeystrokeTap(String key);
-
-        void onMarkTap(String text);
-    }
-
     public static class NodeRendererFactoryImpl implements NodeRendererFactory {
         @Override
         public NodeRenderer create(DataHolder options) {
@@ -353,8 +334,8 @@ public class MarkdownView extends WebView {
                         addJavascript(HIGHLIGHT_INIT);
 
                         attributes.addValue("language", language);
-                        attributes.addValue("onclick", String.format("javascript:android.onCodeTap('%s', this.textContent);",
-                                language));
+                        //attributes.addValue("onclick", String.format("javascript:android.onCodeTap('%s', this.textContent);",
+                        //        language));
                     }
                 }
             } else if (node instanceof MathJax) {
@@ -366,17 +347,17 @@ public class MarkdownView extends WebView {
                 addJavascript(TOOLTIPSTER_INIT);
                 attributes.addValue("class", "tooltip");
             } else if (node instanceof Heading) {
-                attributes.addValue("onclick", String.format("javascript:android.onHeadingTap(%d, '%s');",
-                        ((Heading) node).getLevel(), ((Heading) node).getText()));
+                //attributes.addValue("onclick", String.format("javascript:android.onHeadingTap(%d, '%s');",
+                //        ((Heading) node).getLevel(), ((Heading) node).getText()));
             } else if (node instanceof Image) {
-                attributes.addValue("onclick", String.format("javascript: android.onImageTap(this.src, this.clientWidth, this.clientHeight);"));
+                //attributes.addValue("onclick", String.format("javascript: android.onImageTap(this.src, this.clientWidth, this.clientHeight);"));
             } else if (node instanceof Mark) {
-                attributes.addValue("onclick", String.format("javascript: android.onMarkTap(this.textContent)"));
+                //attributes.addValue("onclick", String.format("javascript: android.onMarkTap(this.textContent)"));
             } else if (node instanceof Keystroke) {
-                attributes.addValue("onclick", String.format("javascript: android.onKeystrokeTap(this.textContent)"));
+                //attributes.addValue("onclick", String.format("javascript: android.onKeystrokeTap(this.textContent)"));
             } else if (node instanceof Link ||
                     node instanceof AutoLink) {
-                attributes.addValue("onclick", String.format("javascript: android.onLinkTap(this.href, this.textContent)"));
+                //attributes.addValue("onclick", String.format("javascript: android.onLinkTap(this.href, this.textContent)"));
             }
         }
     }
@@ -409,57 +390,6 @@ public class MarkdownView extends WebView {
         @Override
         protected void onPostExecute(String s) {
             loadMarkdown(s);
-        }
-    }
-
-    protected class EventDispatcher {
-        @JavascriptInterface
-        public void onButtonTap(String id) {
-            if (mOnElementListener != null) {
-                mOnElementListener.onButtonTap(id);
-            }
-        }
-
-        @JavascriptInterface
-        public void onCodeTap(String lang, String code) {
-            if (mOnElementListener != null) {
-                mOnElementListener.onCodeTap(lang, code);
-            }
-        }
-
-        @JavascriptInterface
-        public void onHeadingTap(int level, String text) {
-            if (mOnElementListener != null) {
-                mOnElementListener.onHeadingTap(level, text);
-            }
-        }
-
-        @JavascriptInterface
-        public void onImageTap(String src, int width, int height) {
-            if (mOnElementListener != null) {
-                mOnElementListener.onImageTap(src, width, height);
-            }
-        }
-
-        @JavascriptInterface
-        public void onMarkTap(String text) {
-            if (mOnElementListener != null) {
-                mOnElementListener.onMarkTap(text);
-            }
-        }
-
-        @JavascriptInterface
-        public void onKeystrokeTap(String key) {
-            if (mOnElementListener != null) {
-                mOnElementListener.onKeystrokeTap(key);
-            }
-        }
-
-        @JavascriptInterface
-        public void onLinkTap(String href, String text) {
-            if (mOnElementListener != null) {
-                mOnElementListener.onLinkTap(href, text);
-            }
         }
     }
 }

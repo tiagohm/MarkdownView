@@ -32,11 +32,19 @@ public class MathJaxNodeRenderer implements NodeRenderer {
     }
 
     private void render(MathJax node, NodeRendererContext context, HtmlWriter html) {
-        html.withAttr().tag("math");
-        html.append("$");
+        html.withAttr().attr("class", "math").tag("span");
+        if (node.isInline()) {
+            html.append("\\(");
+        } else {
+            html.append("$$");
+        }
         context.renderChildren(node);
-        html.append("$");
-        html.tag("/math");
+        if (node.isInline()) {
+            html.append("\\)");
+        } else {
+            html.append("$$");
+        }
+        html.tag("/span");
     }
 
     public static class Factory implements NodeRendererFactory {

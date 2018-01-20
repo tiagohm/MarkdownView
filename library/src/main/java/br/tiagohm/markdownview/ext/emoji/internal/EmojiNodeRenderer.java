@@ -42,7 +42,7 @@ public class EmojiNodeRenderer implements NodeRenderer {
     }
 
     private void render(Emoji node, NodeRendererContext context, HtmlWriter html) {
-        Emoji emoji = (Emoji) node;
+        Emoji emoji = node;
         EmojiCheatSheet.EmojiShortcut shortcut = EmojiCheatSheet.getImageShortcut(emoji.getText().toString());
 
         if (shortcut == null) {

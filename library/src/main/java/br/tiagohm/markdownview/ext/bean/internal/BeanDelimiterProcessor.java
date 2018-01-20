@@ -1,4 +1,4 @@
-package br.tiagohm.markdownview.ext.localization.internal;
+package br.tiagohm.markdownview.ext.bean.internal;
 
 import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.internal.Delimiter;
@@ -7,9 +7,9 @@ import com.vladsch.flexmark.parser.delimiter.DelimiterProcessor;
 import com.vladsch.flexmark.parser.delimiter.DelimiterRun;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
 
-import br.tiagohm.markdownview.ext.localization.Localization;
+import br.tiagohm.markdownview.ext.bean.Bean;
 
-public class LocalizationDelimiterProcessor implements DelimiterProcessor {
+public class BeanDelimiterProcessor implements DelimiterProcessor {
 
     @Override
     public char getOpeningCharacter() {
@@ -42,7 +42,7 @@ public class LocalizationDelimiterProcessor implements DelimiterProcessor {
 
     @Override
     public void process(Delimiter opener, Delimiter closer, int delimitersUsed) {
-        Localization loc = new Localization(opener.getTailChars(delimitersUsed), BasedSequence.NULL, closer.getLeadChars(delimitersUsed));
+        Bean loc = new Bean(opener.getTailChars(delimitersUsed), BasedSequence.NULL, closer.getLeadChars(delimitersUsed));
         opener.moveNodesBetweenDelimitersTo(loc, closer);
     }
 

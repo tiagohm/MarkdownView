@@ -33,9 +33,10 @@ public class MathJaxDelimiterProcessor implements DelimiterProcessor {
 
     @Override
     public int getDelimiterUse(DelimiterRun opener, DelimiterRun closer) {
-        if (opener.length() >= 1 && closer.length() >= 1) {
-            // Use exactly two delimiters even if we have more, and don't care about internal openers/closers.
+        if (opener.length() == 1 && closer.length() == 1) {
             return 1;
+        } else if (opener.length() == 2 && closer.length() == 2) {
+            return 2;
         } else {
             return 0;
         }
@@ -44,7 +45,7 @@ public class MathJaxDelimiterProcessor implements DelimiterProcessor {
     @Override
     public void process(Delimiter opener, Delimiter closer, int delimitersUsed) {
         // wrap nodes between delimiters in strikethrough.
-        MathJax mj = new MathJax(opener.getTailChars(delimitersUsed), BasedSequence.NULL, closer.getLeadChars(delimitersUsed));
+        MathJax mj = new MathJax(opener.getTailChars(delimitersUsed), BasedSequence.NULL, closer.getLeadChars(delimitersUsed), delimitersUsed == 1);
         opener.moveNodesBetweenDelimitersTo(mj, closer);
     }
 
