@@ -62,7 +62,7 @@ import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
 import br.tiagohm.markdownview.ext.kbd.Keystroke;
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.label.LabelExtension;
-import br.tiagohm.markdownview.ext.localization.LocalizationExtension;
+import br.tiagohm.markdownview.ext.bean.BeanExtension;
 import br.tiagohm.markdownview.ext.mark.Mark;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
 import br.tiagohm.markdownview.ext.mathjax.MathJax;
@@ -96,7 +96,7 @@ public class MarkdownView extends WebView {
             VideoLinkExtension.create(),
             TwitterExtension.create(),
             LabelExtension.create(),
-            LocalizationExtension.create());
+            BeanExtension.create());
     private final DataHolder OPTIONS = new MutableDataSet()
             .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
             .set(FootnoteExtension.FOOTNOTE_REF_SUFFIX, "]")
@@ -107,6 +107,7 @@ public class MarkdownView extends WebView {
     private final List<StyleSheet> mStyleSheets = new LinkedList<>();
     private final HashSet<JavaScript> mScripts = new LinkedHashSet<>();
     private boolean mEscapeHtml = true;
+    private Object bean;
 
     public MarkdownView(Context context) {
         this(context, null);
@@ -119,7 +120,7 @@ public class MarkdownView extends WebView {
     public MarkdownView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        ((MutableDataHolder) OPTIONS).set(LocalizationExtension.LOCALIZATION_CONTEXT, context);
+        ((MutableDataHolder) OPTIONS).set(BeanExtension.BEAN_VIEW, this);
 
         try {
             setWebChromeClient(new WebChromeClient());
@@ -138,6 +139,14 @@ public class MarkdownView extends WebView {
         }
 
         addJavascript(JQUERY_3);
+    }
+
+    public void setBean(Object bean) {
+        this.bean = bean;
+    }
+
+    public Object getBean() {
+        return bean;
     }
 
     public MarkdownView setEscapeHtml(boolean flag) {

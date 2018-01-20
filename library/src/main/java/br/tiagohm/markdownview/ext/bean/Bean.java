@@ -1,30 +1,30 @@
-package br.tiagohm.markdownview.ext.localization;
+package br.tiagohm.markdownview.ext.bean;
 
 import com.vladsch.flexmark.ast.CustomNode;
 import com.vladsch.flexmark.ast.DelimitedNode;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
 
-public class Localization extends CustomNode implements DelimitedNode {
+public class Bean extends CustomNode implements DelimitedNode {
     protected BasedSequence openingMarker = BasedSequence.NULL;
     protected BasedSequence text = BasedSequence.NULL;
     protected BasedSequence closingMarker = BasedSequence.NULL;
     protected String superscriptBlockText;
 
-    public Localization() {
+    public Bean() {
     }
 
-    public Localization(BasedSequence chars) {
+    public Bean(BasedSequence chars) {
         super(chars);
     }
 
-    public Localization(BasedSequence openingMarker, BasedSequence text, BasedSequence closingMarker) {
+    public Bean(BasedSequence openingMarker, BasedSequence text, BasedSequence closingMarker) {
         super(openingMarker.baseSubSequence(openingMarker.getStartOffset(), closingMarker.getEndOffset()));
         this.openingMarker = openingMarker;
         this.text = text;
         this.closingMarker = closingMarker;
     }
 
-    public Localization(BasedSequence chars, String superscriptBlockText) {
+    public Bean(BasedSequence chars, String superscriptBlockText) {
         super(chars);
         this.superscriptBlockText = superscriptBlockText;
     }

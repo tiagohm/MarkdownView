@@ -189,6 +189,6 @@ Seguir: #[follow](tiag0hm)
 
 --DEFAULT-- ---SUCCESS--- ----WARNING---- -----DANGER-----
 
-# Localization
+# Bean
 
-{{hello}}
+{{diasDaSemana.name.toLowerCase}}
