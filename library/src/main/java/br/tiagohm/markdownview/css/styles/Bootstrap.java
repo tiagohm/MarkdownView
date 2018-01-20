@@ -63,6 +63,7 @@ public abstract class Bootstrap extends InternalStyleSheet {
         addRule(".player", "position: relative", "padding-bottom: 56.25%", "padding-top: 25px", "height: 0");
         addRule(".player iframe", "position: absolute", "top: 0", "left: 0", "width: 100%", "height: 100%");
         addRule(".twitter-follow-button", "vertical-align: middle");
+        addRule(".scrollup", "background-color: #24292e");
         //IDs
 
         //Highlight.js

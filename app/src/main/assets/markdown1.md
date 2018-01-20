@@ -8,17 +8,17 @@ To create **bold** or *italic*, wrap with asterisks * or underscores _.
 
 To avoid creating __bold__ or _italic_, place a backslash in front \\* or \\_.
 
-Any word wrapped with two tildes (like ~~this~~) will appear crossed out.
+Any <red>word</red> wrapped with two tildes (like ~~this~~) will appear crossed out.
 
 # Paragraphs
 
-A paragraph is consecutive lines of text with one or more blank lines between them.
+A paragraph is consecutive lines of text with one or more blank lines between them. { .text-right .green .text-small }
 
-For a line break, add either a backslash \ or two blank spaces at the end of the line.
+For a line break, add either a backslash \ or two blank spaces at the end of the line. { .text-left .blue .text-large }
 
-This is the first paragraph.
+This is the first paragraph. { .text-center .orange }
 
-This is the second paragraph.
+This is the second paragraph. { .text-justify .purple }
 
 This is a\
 line break.
@@ -128,7 +128,7 @@ To nest one list within another, indent each item in the sublist by four spaces.
 
 # AutoLink
 
-http://www.github.com/
+http://www.github.com/ { #id-1 }
 
 # Abbreviation
 
@@ -191,4 +191,4 @@ Seguir: #[follow](tiag0hm)
 
 # Bean
 
-{{diasDaSemana.name.toLowerCase}}
+{{diasDaSemana.name.toLowerCase}}{ .red }

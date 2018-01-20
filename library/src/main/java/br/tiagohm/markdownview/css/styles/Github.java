@@ -22,6 +22,7 @@ public class Github extends Bootstrap {
         addRule("pre:not([language])", "padding: 6px 10px");
         addRule(".footnotes li p:last-of-type", "display: inline");
         addRule(".yt-player", "box-shadow: 0px 0px 12px rgba(0,0,0,0.2)");
+        addRule(".scrollup", "background-color: #00BF4C");
 
         //Highlight.js
 

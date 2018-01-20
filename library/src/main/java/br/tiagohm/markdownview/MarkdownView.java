@@ -19,6 +19,7 @@ import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.ast.util.TextCollectingVisitor;
 import com.vladsch.flexmark.ext.abbreviation.Abbreviation;
 import com.vladsch.flexmark.ext.abbreviation.AbbreviationExtension;
+import com.vladsch.flexmark.ext.attributes.AttributesExtension;
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
 import com.vladsch.flexmark.ext.footnotes.FootnoteExtension;
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughSubscriptExtension;
@@ -57,12 +58,13 @@ import java.util.List;
 import java.util.Set;
 
 import br.tiagohm.markdownview.css.ExternalStyleSheet;
+import br.tiagohm.markdownview.css.InternalStyleSheet;
 import br.tiagohm.markdownview.css.StyleSheet;
+import br.tiagohm.markdownview.ext.bean.BeanExtension;
 import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
 import br.tiagohm.markdownview.ext.kbd.Keystroke;
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.label.LabelExtension;
-import br.tiagohm.markdownview.ext.bean.BeanExtension;
 import br.tiagohm.markdownview.ext.mark.Mark;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
 import br.tiagohm.markdownview.ext.mathjax.MathJax;
@@ -81,6 +83,7 @@ public class MarkdownView extends WebView {
     public final static JavaScript HIGHLIGHT_INIT = new ExternalScript("file:///android_asset/js/highlight-init.js", false, true);
     public final static JavaScript TOOLTIPSTER_JS = new ExternalScript("file:///android_asset/js/tooltipster.bundle.min.js", false, true);
     public final static JavaScript TOOLTIPSTER_INIT = new ExternalScript("file:///android_asset/js/tooltipster-init.js", false, true);
+    public final static JavaScript MY_SCRIPT = new ExternalScript("file:///android_asset/js/my-script.js", false, true);
     public final static StyleSheet TOOLTIPSTER_CSS = new ExternalStyleSheet("file:///android_asset/css/tooltipster.bundle.min.css");
     private final static List<Extension> EXTENSIONS = Arrays.asList(TablesExtension.create(),
             TaskListExtension.create(),
@@ -96,7 +99,9 @@ public class MarkdownView extends WebView {
             VideoLinkExtension.create(),
             TwitterExtension.create(),
             LabelExtension.create(),
-            BeanExtension.create());
+            BeanExtension.create(),
+            AttributesExtension.create()
+    );
     private final DataHolder OPTIONS = new MutableDataSet()
             .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
             .set(FootnoteExtension.FOOTNOTE_REF_SUFFIX, "]")
@@ -139,14 +144,15 @@ public class MarkdownView extends WebView {
         }
 
         addJavascript(JQUERY_3);
-    }
-
-    public void setBean(Object bean) {
-        this.bean = bean;
+        addJavascript(MY_SCRIPT);
     }
 
     public Object getBean() {
         return bean;
+    }
+
+    public void setBean(Object bean) {
+        this.bean = bean;
     }
 
     public MarkdownView setEscapeHtml(boolean flag) {
@@ -230,20 +236,28 @@ public class MarkdownView extends WebView {
         StringBuilder sb = new StringBuilder();
         sb.append("<html>\n");
         sb.append("<head>\n");
-
+        //Folha de estilo padrão.
+        if (mStyleSheets.size() <= 0) {
+            mStyleSheets.add(new InternalStyleSheet());
+        }
+        //Adiciona as folhas de estilo.
         for (StyleSheet s : mStyleSheets) {
             sb.append(s.toHTML());
         }
-
+        //Adiciona os scripts.
         for (JavaScript js : mScripts) {
             sb.append(js.toHTML());
         }
 
         sb.append("</head>\n");
         sb.append("<body>\n");
-        sb.append("<div class=\"container\">\n");
+        sb.append("<div class='container'>\n");
         sb.append(html);
         sb.append("</div>\n");
+        sb.append("<a href='#' class='scrollup'><svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='25px' height='25px' viewBox='0 0 24 24' version='1.1'>\n" +
+                "<g><path fill='#fff' d='M 12 5.09375 L 11.28125 5.78125 L 2.28125 14.78125 L 3.71875 16.21875 L 12 7.9375 L 20.28125 16.21875 L 21.71875 14.78125 L 12.71875 5.78125 Z'></path>\n" +
+                "</g>\n" +
+                "</svg></a>");
         sb.append("</body>\n");
         sb.append("</html>");
 
