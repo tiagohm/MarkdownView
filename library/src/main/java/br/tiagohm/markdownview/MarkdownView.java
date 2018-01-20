@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.Set;
 
 import br.tiagohm.markdownview.css.ExternalStyleSheet;
+import br.tiagohm.markdownview.css.InternalStyleSheet;
 import br.tiagohm.markdownview.css.StyleSheet;
 import br.tiagohm.markdownview.ext.bean.BeanExtension;
 import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
@@ -233,11 +234,15 @@ public class MarkdownView extends WebView {
         StringBuilder sb = new StringBuilder();
         sb.append("<html>\n");
         sb.append("<head>\n");
-
+        //Folha de estilo padrão.
+        if (mStyleSheets.size() <= 0) {
+            mStyleSheets.add(new InternalStyleSheet());
+        }
+        //Adiciona as folhas de estilo.
         for (StyleSheet s : mStyleSheets) {
             sb.append(s.toHTML());
         }
-
+        //Adiciona os scripts.
         for (JavaScript js : mScripts) {
             sb.append(js.toHTML());
         }

@@ -16,6 +16,55 @@ public class InternalStyleSheet implements StyleSheet {
     public InternalStyleSheet() {
         currentMediaQuery = NO_MEDIA_QUERY;
         mRules.put(currentMediaQuery, new LinkedHashMap<String, Map<String, String>>());
+        //Estilos padrões.
+        //Alinhamento de Texto
+        addRule("p", "text-align: left");
+        addRule(".text-left", "text-align: left");
+        addRule(".text-right", "text-align: right");
+        addRule(".text-center", "text-align: center");
+        addRule(".text-justify", "text-align: justify");
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        for (Map.Entry<String, String> faces : mFontFaces.entrySet()) {
+            sb.append("@font-face {");
+            sb.append(faces.getValue());
+            sb.append("}\n");
+        }
+
+        for (Map.Entry<String, Map<String, Map<String, String>>> q : mRules.entrySet()) {
+            if (!q.getKey().equals(NO_MEDIA_QUERY)) {
+                sb.append("@media ");
+                sb.append(q.getKey());
+                sb.append(" {\n");
+            }
+
+            for (Map.Entry<String, Map<String, String>> e : q.getValue().entrySet()) {
+                sb.append(e.getKey());
+                sb.append(" {");
+                for (Map.Entry<String, String> declaration : e.getValue().entrySet()) {
+                    sb.append(declaration.getKey());
+                    sb.append(":");
+                    sb.append(declaration.getValue());
+                    sb.append(";");
+                }
+                sb.append("}\n");
+            }
+
+            if (!q.getKey().equals(NO_MEDIA_QUERY)) {
+                sb.append("}\n");
+            }
+        }
+
+        return sb.toString();
+    }
+
+    @Override
+    public String toHTML() {
+        return "<style>\n" + toString() + "\n</style>\n";
     }
 
     private Map<String, Map<String, String>> getCurrentMediaQuery() {
@@ -96,47 +145,5 @@ public class InternalStyleSheet implements StyleSheet {
                 getCurrentMediaQuery().get(selector).put(declarationName, newDeclarationValue);
             }
         }
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-        for (Map.Entry<String, String> faces : mFontFaces.entrySet()) {
-            sb.append("@font-face {");
-            sb.append(faces.getValue());
-            sb.append("}\n");
-        }
-
-        for (Map.Entry<String, Map<String, Map<String, String>>> q : mRules.entrySet()) {
-            if (!q.getKey().equals(NO_MEDIA_QUERY)) {
-                sb.append("@media ");
-                sb.append(q.getKey());
-                sb.append(" {\n");
-            }
-
-            for (Map.Entry<String, Map<String, String>> e : q.getValue().entrySet()) {
-                sb.append(e.getKey());
-                sb.append(" {");
-                for (Map.Entry<String, String> declaration : e.getValue().entrySet()) {
-                    sb.append(declaration.getKey());
-                    sb.append(":");
-                    sb.append(declaration.getValue());
-                    sb.append(";");
-                }
-                sb.append("}\n");
-            }
-
-            if (!q.getKey().equals(NO_MEDIA_QUERY)) {
-                sb.append("}\n");
-            }
-        }
-
-        return sb.toString();
-    }
-
-    @Override
-    public String toHTML() {
-        return "<style>\n" + toString() + "\n</style>\n";
     }
 }
