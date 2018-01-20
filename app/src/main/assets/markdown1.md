@@ -12,13 +12,13 @@ Any word wrapped with two tildes (like ~~this~~) will appear crossed out.
 
 # Paragraphs
 
-A paragraph is consecutive lines of text with one or more blank lines between them. { .text-right }
+A paragraph is consecutive lines of text with one or more blank lines between them. { .text-right .green }
 
-For a line break, add either a backslash \ or two blank spaces at the end of the line. { .text-left }
+For a line break, add either a backslash \ or two blank spaces at the end of the line. { .text-left .blue }
 
-This is the first paragraph. { .text-center }
+This is the first paragraph. { .text-center .orange }
 
-This is the second paragraph. { .text-justify }
+This is the second paragraph. { .text-justify .purple }
 
 This is a\
 line break.

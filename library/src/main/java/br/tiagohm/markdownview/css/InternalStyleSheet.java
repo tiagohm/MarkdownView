@@ -23,6 +23,26 @@ public class InternalStyleSheet implements StyleSheet {
         addRule(".text-right", "text-align: right");
         addRule(".text-center", "text-align: center");
         addRule(".text-justify", "text-align: justify");
+        //Cores.
+        addRule("red, .red", "color: #f44336");
+        addRule("pink, .pink", "color: #E91E63");
+        addRule("purple, .purple", "color: #9C27B0");
+        addRule("deeppurple, .deeppurple", "color: #673AB7");
+        addRule("indigo, .indigo", "color: #3F51B5");
+        addRule("blue, .blue", "color: #2196F3");
+        addRule("lightblue, .lightblue", "color: #03A9F4");
+        addRule("cyan, .cyan", "color: #00BCD4");
+        addRule("teal, .teal", "color: #009688");
+        addRule("green, .green", "color: #4CAF50");
+        addRule("lightgreen, .lightgreen", "color: #8BC34A");
+        addRule("lime, .lime", "color: #CDDC39");
+        addRule("yellow, .yellow", "color: #FFEB3B");
+        addRule("amber, .amber", "color: #FFC107");
+        addRule("orange, .orange", "color: #FF9800");
+        addRule("deeporange, .deeporange", "color: #FF5722");
+        addRule("brown, .brown", "color: #795548");
+        addRule("grey, .grey", "color: #9E9E9E");
+        addRule("bluegrey, .bluegrey", "color: #607D8B");
     }
 
     @Override
