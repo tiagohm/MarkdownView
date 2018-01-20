@@ -53,6 +53,9 @@ public class InternalStyleSheet implements StyleSheet {
         addRule("x-large, .text-x-large", "font-size: x-large");
         addRule("xx-small, .text-xx-small", "font-size: xx-small");
         addRule("xx-large, .text-xx-large", "font-size: xx-large");
+        //Botão voltar ao topo.
+        addRule("body", "margin-bottom: 50px !important");
+        addRule(".scrollup", "width: 55px", "height: 55px", "position: fixed", "bottom: 15px", "right: 15px", "visibility: hidden", "display: flex", "align-items: center", "justify-content: center", "margin: 0 !important", "line-height: 70px", "box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28)", "border-radius: 50%", "color: #fff", "padding: 5px");
     }
 
     @Override
