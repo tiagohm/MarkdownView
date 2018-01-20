@@ -19,6 +19,7 @@ import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.ast.util.TextCollectingVisitor;
 import com.vladsch.flexmark.ext.abbreviation.Abbreviation;
 import com.vladsch.flexmark.ext.abbreviation.AbbreviationExtension;
+import com.vladsch.flexmark.ext.attributes.AttributesExtension;
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
 import com.vladsch.flexmark.ext.footnotes.FootnoteExtension;
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughSubscriptExtension;
@@ -58,11 +59,11 @@ import java.util.Set;
 
 import br.tiagohm.markdownview.css.ExternalStyleSheet;
 import br.tiagohm.markdownview.css.StyleSheet;
+import br.tiagohm.markdownview.ext.bean.BeanExtension;
 import br.tiagohm.markdownview.ext.emoji.EmojiExtension;
 import br.tiagohm.markdownview.ext.kbd.Keystroke;
 import br.tiagohm.markdownview.ext.kbd.KeystrokeExtension;
 import br.tiagohm.markdownview.ext.label.LabelExtension;
-import br.tiagohm.markdownview.ext.bean.BeanExtension;
 import br.tiagohm.markdownview.ext.mark.Mark;
 import br.tiagohm.markdownview.ext.mark.MarkExtension;
 import br.tiagohm.markdownview.ext.mathjax.MathJax;
@@ -96,7 +97,9 @@ public class MarkdownView extends WebView {
             VideoLinkExtension.create(),
             TwitterExtension.create(),
             LabelExtension.create(),
-            BeanExtension.create());
+            BeanExtension.create(),
+            AttributesExtension.create()
+    );
     private final DataHolder OPTIONS = new MutableDataSet()
             .set(FootnoteExtension.FOOTNOTE_REF_PREFIX, "[")
             .set(FootnoteExtension.FOOTNOTE_REF_SUFFIX, "]")
@@ -141,12 +144,12 @@ public class MarkdownView extends WebView {
         addJavascript(JQUERY_3);
     }
 
-    public void setBean(Object bean) {
-        this.bean = bean;
-    }
-
     public Object getBean() {
         return bean;
+    }
+
+    public void setBean(Object bean) {
+        this.bean = bean;
     }
 
     public MarkdownView setEscapeHtml(boolean flag) {
