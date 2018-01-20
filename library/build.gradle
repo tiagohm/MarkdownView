@@ -31,14 +31,14 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     //Flexmark
-    implementation 'com.vladsch.flexmark:flexmark:0.27.0'
-    implementation 'com.vladsch.flexmark:flexmark-ext-tables:0.27.0'
-    implementation 'com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.27.0'
-    implementation 'com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.27.0'
-    implementation 'com.vladsch.flexmark:flexmark-ext-autolink:0.27.0'
-    implementation 'com.vladsch.flexmark:flexmark-ext-abbreviation:0.27.0'
-    implementation 'com.vladsch.flexmark:flexmark-ext-superscript:0.27.0'
-    implementation 'com.vladsch.flexmark:flexmark-ext-footnotes:0.27.0'
+    implementation 'com.vladsch.flexmark:flexmark:0.28.32'
+    implementation 'com.vladsch.flexmark:flexmark-ext-tables:0.28.32'
+    implementation 'com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.28.32'
+    implementation 'com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.28.32'
+    implementation 'com.vladsch.flexmark:flexmark-ext-autolink:0.28.32'
+    implementation 'com.vladsch.flexmark:flexmark-ext-abbreviation:0.28.32'
+    implementation 'com.vladsch.flexmark:flexmark-ext-superscript:0.28.32'
+    implementation 'com.vladsch.flexmark:flexmark-ext-footnotes:0.28.32'
     //Logger
     implementation 'com.orhanobut:logger:1.15'
 }

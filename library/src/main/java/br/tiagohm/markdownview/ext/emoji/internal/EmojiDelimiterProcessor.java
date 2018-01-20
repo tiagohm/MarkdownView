@@ -41,6 +41,21 @@ public class EmojiDelimiterProcessor implements DelimiterProcessor {
     }
 
     @Override
+    public boolean canBeOpener(String before, String after, boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace) {
+        return leftFlanking && !"0123456789".contains(before);
+    }
+
+    @Override
+    public boolean canBeCloser(String before, String after, boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace) {
+        return rightFlanking && !"0123456789".contains(after);
+    }
+
+    @Override
+    public boolean skipNonOpenerCloser() {
+        return true;
+    }
+
+    @Override
     public void process(Delimiter opener, Delimiter closer, int delimitersUsed) {
         // Normal case, wrap nodes between delimiters in emoji node.
         // don't allow any spaces between delimiters
@@ -50,15 +65,5 @@ public class EmojiDelimiterProcessor implements DelimiterProcessor {
         } else {
             opener.convertDelimitersToText(delimitersUsed, closer);
         }
-    }
-
-    @Override
-    public boolean canBeOpener(boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace) {
-        return leftFlanking;
-    }
-
-    @Override
-    public boolean canBeCloser(boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace) {
-        return rightFlanking;
     }
 }
