@@ -76,9 +76,9 @@ public class MarkdownView extends WebView {
 
     public final static JavaScript JQUERY_3 = new ExternalScript("file:///android_asset/js/jquery-3.1.1.min.js", false, false);
     public final static JavaScript HIGHLIGHTJS = new ExternalScript("file:///android_asset/js/highlight.js", false, true);
-    public final static JavaScript MATHJAX = new ExternalScript("https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML", false, true);
+    public final static JavaScript MATHJAX = new ExternalScript("https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML", true, false);
+    public final static JavaScript MATHJAX_CONFIG = new ExternalScript("file:///android_asset/js/mathjax-config.js", false, false, "text/x-mathjax-config");
     public final static JavaScript HIGHLIGHT_INIT = new ExternalScript("file:///android_asset/js/highlight-init.js", false, true);
-    public final static JavaScript MATHJAX_CONFIG = new ExternalScript("file:///android_asset/js/mathjax-config.js", false, true);
     public final static JavaScript TOOLTIPSTER_JS = new ExternalScript("file:///android_asset/js/tooltipster.bundle.min.js", false, true);
     public final static JavaScript TOOLTIPSTER_INIT = new ExternalScript("file:///android_asset/js/tooltipster-init.js", false, true);
     public final static StyleSheet TOOLTIPSTER_CSS = new ExternalStyleSheet("file:///android_asset/css/tooltipster.bundle.min.css");
