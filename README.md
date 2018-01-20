@@ -116,6 +116,8 @@ From *https://twitter.com/tiag0hm*
 - [x] JavaScripts
 - [x] Label `--DEFAULT--` `---SUCCESS---` `----WARNING----` `-----DANGER-----`
 - [x] Bean `{{fieldName}}`
+- [x] Custom Attributes `{ #id .class name=value name='value'}`
+- [x] Text Align, Text Size and Text Colors using Custom Attributes
 
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/1.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/2.png'/>
