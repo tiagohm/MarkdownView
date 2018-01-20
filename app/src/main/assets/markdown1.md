@@ -189,10 +189,6 @@ Seguir: #[follow](tiag0hm)
 
 --DEFAULT-- ---SUCCESS--- ----WARNING---- -----DANGER-----
 
-# Button
-
-B[**Click** *Me!*](click-me-btn)
-
 # Localization
 
-B[{{hello}}](hello-btn)
+{{hello}}

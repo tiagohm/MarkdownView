@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mMarkdownView = (MarkdownView) findViewById(R.id.mark_view);
+        mMarkdownView = findViewById(R.id.mark_view);
         mMarkdownView.addStyleSheet(mStyle);
         //http://stackoverflow.com/questions/6370690/media-queries-how-to-target-desktop-tablet-and-mobile
         mStyle.addMedia("screen and (min-width: 320px)");
