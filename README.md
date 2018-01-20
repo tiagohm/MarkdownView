@@ -17,7 +17,7 @@ allprojects {
 ```
 Add the dependency:
 ```gradle
-compile 'com.github.tiagohm.MarkdownView:library:LATEST-VERSION'
+implementation 'com.github.tiagohm.MarkdownView:library:LATEST-VERSION'
 ```
 
 LATEST-VERSION is [![](https://jitpack.io/v/tiagohm/MarkdownView.svg)](https://jitpack.io/#tiagohm/MarkdownView)
@@ -44,18 +44,7 @@ mMarkdownView.loadMarkdownFromUrl("url");
 ##### Without internet
 Add the dependency:
 ```gradle
-compile 'com.github.tiagohm.MarkdownView:emoji:LATEST-VERSION'
-```
-
-##### With internet
-Add the permission:
-```xml
-<uses-permission android:name="android.permission.INTERNET"/>
-```
-
-```java
-mMarkdownView.setEmojiRootPath("http://emojione.com/wp-content/uploads/assets/emojis/");
-mMarkdownView.setEmojiImageExtension("svg");
+implementation 'com.github.tiagohm.MarkdownView:emoji:LATEST-VERSION'
 ```
 
 ## Custom CSS
@@ -91,15 +80,6 @@ From *https://twitter.com/RealGrumpyCat/status/845101936550469634*
 From *https://twitter.com/tiag0hm*
 * `#[follow](tiag0hm)`
 
-## Tap Events
-```java
-mMarkdownView.setOnElementListener(new MarkdownView.OnElementListener(){ /*...*/ });
-```
-
-## Localization
-
-See more [here](https://developer.android.com/guide/topics/resources/localization.html#managing-strings)
-
 ## Themes
 * GitHub
 
@@ -124,19 +104,18 @@ See more [here](https://developer.android.com/guide/topics/resources/localizatio
 - [x] Subscript `H~2~O`
 - [x] Superscript `10^-10^`
 - [x] Keystroke `@ctrl+alt+del@`
-- [x] MathJax `$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$`
+- [x] MathJax Inline `$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$`
+- [x] MathJax `$$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$$`
 - [x] Footnotes
 - [x] Image Resizing `![alt](url@100px|auto)`
 - [x] Syntax Highlighting (using [Highlight.js](https://highlightjs.org/))
-- [x] Emoji ([EmojiOne](http://emojione.com)) `:smile:`
+- [x] Emoji ([EmojiOne v2](http://emojione.com)) `:smile:`
 - [x] Custom CSS
 - [x] Youtube `@[youtube](fM-J08X6l_Q)`
 - [x] Twitter
 - [x] JavaScripts
 - [x] Label `--DEFAULT--` `---SUCCESS---` `----WARNING----` `-----DANGER-----`
-- [x] Button `B[text](id)`
-- [x] Click/Tap Events
-- [x] Localization `{{resource_name}}`
+- [x] Bean `{{fieldName}}`
 
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/1.png'/>
 <img width='380' src='https://raw.githubusercontent.com/tiagohm/MarkdownView/master/2.png'/>
@@ -150,7 +129,7 @@ See more [here](https://developer.android.com/guide/topics/resources/localizatio
 
 ## LICENSE
 ```
-Copyright 2017 tiagohm
+Copyright 2017-2018 tiagohm
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
