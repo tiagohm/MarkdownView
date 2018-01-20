@@ -43,6 +43,16 @@ public class InternalStyleSheet implements StyleSheet {
         addRule("brown, .brown", "color: #795548");
         addRule("grey, .grey", "color: #9E9E9E");
         addRule("bluegrey, .bluegrey", "color: #607D8B");
+        //Tamanho de texto.
+        addRule("smaller, .text-smaller", "font-size: smaller");
+        addRule("small, .text-small", "font-size: small");
+        addRule("medium, .text-medium", "font-size: medium");
+        addRule("large, .text-large", "font-size: large");
+        addRule("larger, .text-larger", "font-size: larger");
+        addRule("x-small, .text-x-small", "font-size: x-small");
+        addRule("x-large, .text-x-large", "font-size: x-large");
+        addRule("xx-small, .text-xx-small", "font-size: xx-small");
+        addRule("xx-large, .text-xx-large", "font-size: xx-large");
     }
 
     @Override

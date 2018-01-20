@@ -8,13 +8,13 @@ To create **bold** or *italic*, wrap with asterisks * or underscores _.
 
 To avoid creating __bold__ or _italic_, place a backslash in front \\* or \\_.
 
-Any word wrapped with two tildes (like ~~this~~) will appear crossed out.
+Any <red>word</red> wrapped with two tildes (like ~~this~~) will appear crossed out.
 
 # Paragraphs
 
-A paragraph is consecutive lines of text with one or more blank lines between them. { .text-right .green }
+A paragraph is consecutive lines of text with one or more blank lines between them. { .text-right .green .text-small }
 
-For a line break, add either a backslash \ or two blank spaces at the end of the line. { .text-left .blue }
+For a line break, add either a backslash \ or two blank spaces at the end of the line. { .text-left .blue .text-large }
 
 This is the first paragraph. { .text-center .orange }
 
