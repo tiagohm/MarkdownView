@@ -32,6 +32,21 @@ public class BeanDelimiterProcessor implements DelimiterProcessor {
     }
 
     @Override
+    public boolean canBeOpener(String before, String after, boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace) {
+        return leftFlanking;
+    }
+
+    @Override
+    public boolean canBeCloser(String before, String after, boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace) {
+        return rightFlanking;
+    }
+
+    @Override
+    public boolean skipNonOpenerCloser() {
+        return false;
+    }
+
+    @Override
     public int getDelimiterUse(DelimiterRun opener, DelimiterRun closer) {
         if (opener.length() == 2 && closer.length() == 2) {
             return 2;
@@ -44,15 +59,5 @@ public class BeanDelimiterProcessor implements DelimiterProcessor {
     public void process(Delimiter opener, Delimiter closer, int delimitersUsed) {
         Bean loc = new Bean(opener.getTailChars(delimitersUsed), BasedSequence.NULL, closer.getLeadChars(delimitersUsed));
         opener.moveNodesBetweenDelimitersTo(loc, closer);
-    }
-
-    @Override
-    public boolean canBeOpener(boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace) {
-        return leftFlanking;
-    }
-
-    @Override
-    public boolean canBeCloser(boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace) {
-        return rightFlanking;
     }
 }

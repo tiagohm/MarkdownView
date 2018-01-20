@@ -32,6 +32,21 @@ public class MarkDelimiterProcessor implements DelimiterProcessor {
     }
 
     @Override
+    public boolean canBeOpener(String before, String after, boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace) {
+        return leftFlanking;
+    }
+
+    @Override
+    public boolean canBeCloser(String before, String after, boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace) {
+        return rightFlanking;
+    }
+
+    @Override
+    public boolean skipNonOpenerCloser() {
+        return false;
+    }
+
+    @Override
     public int getDelimiterUse(DelimiterRun opener, DelimiterRun closer) {
         if (opener.length() >= 2 && closer.length() >= 2) {
             // Use exactly two delimiters even if we have more, and don't care about internal openers/closers.
@@ -46,15 +61,5 @@ public class MarkDelimiterProcessor implements DelimiterProcessor {
         // wrap nodes between delimiters in strikethrough.
         Mark mark = new Mark(opener.getTailChars(delimitersUsed), BasedSequence.NULL, closer.getLeadChars(delimitersUsed));
         opener.moveNodesBetweenDelimitersTo(mark, closer);
-    }
-
-    @Override
-    public boolean canBeOpener(boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace) {
-        return leftFlanking;
-    }
-
-    @Override
-    public boolean canBeCloser(boolean leftFlanking, boolean rightFlanking, boolean beforeIsPunctuation, boolean afterIsPunctuation, boolean beforeIsWhitespace, boolean afterIsWhiteSpace) {
-        return rightFlanking;
     }
 }
