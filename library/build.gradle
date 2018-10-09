@@ -4,11 +4,11 @@ apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.tiagohm'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
@@ -21,25 +21,28 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildToolsVersion = '28.0.3'
 }
 
 dependencies {
+    def flexmark_version = "0.28.32"
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.android.support:appcompat-v7:27.0.1'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     //Flexmark
-    implementation 'com.vladsch.flexmark:flexmark:0.28.32'
-    implementation 'com.vladsch.flexmark:flexmark-ext-tables:0.28.32'
-    implementation 'com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.28.32'
-    implementation 'com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.28.32'
-    implementation 'com.vladsch.flexmark:flexmark-ext-autolink:0.28.32'
-    implementation 'com.vladsch.flexmark:flexmark-ext-abbreviation:0.28.32'
-    implementation 'com.vladsch.flexmark:flexmark-ext-superscript:0.28.32'
-    implementation 'com.vladsch.flexmark:flexmark-ext-footnotes:0.28.32'
-    implementation 'com.vladsch.flexmark:flexmark-ext-attributes:0.28.32'
+    implementation "com.vladsch.flexmark:flexmark:$flexmark_version"
+    implementation "com.vladsch.flexmark:flexmark-ext-tables:$flexmark_version"
+    implementation "com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:$flexmark_version"
+    implementation "com.vladsch.flexmark:flexmark-ext-gfm-tasklist:$flexmark_version"
+    implementation "com.vladsch.flexmark:flexmark-ext-autolink:$flexmark_version"
+    implementation "com.vladsch.flexmark:flexmark-ext-abbreviation:$flexmark_version"
+    implementation "com.vladsch.flexmark:flexmark-ext-superscript:$flexmark_version"
+    implementation "com.vladsch.flexmark:flexmark-ext-footnotes:$flexmark_version"
+    implementation "com.vladsch.flexmark:flexmark-ext-attributes:$flexmark_version"
     //Logger
     implementation 'com.orhanobut:logger:1.15'
 }
